@@ -1,0 +1,12 @@
+
+AI
+	add move function in enemy which calls Ship::move() and then checks collision with player ship
+
+more accurate colliders
+	per pixel collision and collider rotation
+
+make infinite
+
+scaling
+
+multiplayer, if possible
