@@ -6,9 +6,6 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SPAAAAAACE", "SPAAAAAACE\SPAAAAAACE.vcxproj", "{5597CC14-B6C7-475D-A246-4983E4DC37D5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{693BDD32-F148-466F-8BEC-984C93EA18BF}"
-	ProjectSection(SolutionItems) = preProject
-		tempbranch.txt = tempbranch.txt
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
