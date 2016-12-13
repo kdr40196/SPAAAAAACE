@@ -80,11 +80,13 @@ class Player : public Ship {
 class Enemy :public Ship {
 	//range in which the enemy roams
 	//range in which the enemy chases the player
+	static const int range = 200, chaseRadius = 500;
 	public:
 		static const SDL_Color color;
 		static int maxHealth;
 		Enemy();
 		Enemy(Level*, Player*);
+		void move(float timeStep, Level* l, Player* player);
 		void spawn(Level*, Camera*);
 		void die();
 		void respawn(Level*, Camera*);

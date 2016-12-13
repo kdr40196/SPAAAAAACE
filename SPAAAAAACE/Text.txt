@@ -1,6 +1,7 @@
 
 AI
 	add move function in enemy which calls Ship::move() and then checks collision with player ship
+	improve Enemy::move()
 
 more accurate colliders
 	per pixel collision and collider rotation

@@ -302,6 +302,9 @@ void Player::handleInput(SDL_Event& e, Level* l) {
 }
 
 void Player::move(float timeStep, Level *l) {
+	int xDisplacement = xVel * timeStep;
+	int xDisplacement = xVel * timeStep;
+
 	Ship::move(timeStep, l);
 
 	int x, y;
@@ -329,6 +332,54 @@ Enemy::Enemy(Level* l, Player* p) {
 	//angle = rand() % 360;
 
 	collider.init(position.x, position.y, SHIP_WIDTH, SHIP_HEIGHT);
+}
+
+void Enemy::move(float timeStep, Level * l, Player* player) {
+	int displacement = xVel * timeStep;
+
+	position.x += displacement;
+	collider.move(position);
+
+	if (position.x < 0 || position.x + SHIP_WIDTH > l->getWidth()) position.x -= displacement;
+
+	//check if colliding with enemy
+	for (int i = 0; i < TOTAL_ENEMIES; i++) {
+		if (checkCollision(collider.getColliderRect(), gEnemies[i]->getCollider()->getColliderRect())) {
+			position.x -= displacement;
+			collider.move(position);
+			break;
+		}
+	}
+
+	if (checkCollision(collider.getColliderRect(), player->getCollider()->getColliderRect())) {
+		position.x -= displacement;
+		collider.move(position);
+	}
+
+
+	//collider.move(position);
+
+	displacement = yVel * timeStep;
+	position.y += displacement;
+
+	collider.move(position);
+
+	if (position.y < 0 || position.y + SHIP_HEIGHT > l->getHeight()) position.y -= displacement;
+
+	//check if colliding with enemy
+	for (int i = 0; i < TOTAL_ENEMIES; i++) {
+		if (checkCollision(collider.getColliderRect(), gEnemies[i]->getCollider()->getColliderRect())) {
+			position.y -= displacement;
+			collider.move(position);
+			break;
+		}
+	}
+	if (checkCollision(collider.getColliderRect(), player->getCollider()->getColliderRect())) {
+		position.y -= displacement;
+		collider.move(position);
+	}
+
+	//collider.move(position);
 }
 
 void Enemy::spawn(Level* l, Camera* cam) {

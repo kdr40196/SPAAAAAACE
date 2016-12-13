@@ -54,6 +54,7 @@ int main(int argc, char** argv) {
 					gEnemies[i]->die();
 					gEnemies[i]->respawn(&level, &cam);
 				}
+				gEnemies[i]->move(timeStep, &level, &player);
 				gEnemies[i]->render(&cam);
 			}
 			SDL_RenderPresent(gRenderer);
