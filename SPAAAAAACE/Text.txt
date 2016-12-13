@@ -1,7 +1,12 @@
+improve move functions
+
 
 AI
-	add move function in enemy which calls Ship::move() and then checks collision with player ship
+	add enemy states - IDLE, PLAYER_DETECTED, CHASING, RETURNING - enum
+	add original position, angle so enemies can return to IDLE state
 	improve Enemy::move()
+
+	add random rotation to enemies
 
 more accurate colliders
 	per pixel collision and collider rotation
