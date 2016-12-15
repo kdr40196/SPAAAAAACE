@@ -1,4 +1,4 @@
-enemy colliging with each other
+enemy colliding with each other
 
 AI
 	maybe - add enemy states - IDLE, PLAYER_DETECTED, CHASING, RETURNING

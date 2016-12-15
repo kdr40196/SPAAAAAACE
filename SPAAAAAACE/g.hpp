@@ -9,7 +9,7 @@ class Enemy;
 
 const int FPS = 60;
 const float TICKS_PER_FRAME = 1000.f / FPS;
-const int TOTAL_ENEMIES = 20;
+const int TOTAL_ENEMIES = 30;
 extern int gSpawnedEnemies;							//total spawned enemies - ++ on spawing, -- on dying
 
 extern int gScreenWidth, gScreenHeight;

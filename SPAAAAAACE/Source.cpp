@@ -4,7 +4,7 @@ int main(int argc, char** argv) {
 	if (!init()) return -1;
 
 	if (!loadMedia()) return -1;
-	Level level(3000, 3000);
+	Level level(5000, 5000);
 
 	Player player(&level);
 	Camera cam;
