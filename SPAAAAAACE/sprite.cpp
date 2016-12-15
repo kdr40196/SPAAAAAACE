@@ -3,13 +3,12 @@
 #include"camera.hpp"
 #include"g.hpp"
 #include<cmath>
-//#include<vector>
-
+#include<typeinfo>
 
 Texture gSpriteSheet;
 Enemy* gEnemies[TOTAL_ENEMIES];
 vector<Laser> gLasers;
-int spawnedEnemies = 0, gScore = 0;
+int gSpawnedEnemies = 0, gScore = 0;
 
 const SDL_Color Player::color = {0, 0, 255, 255};
 const SDL_Color Enemy::color = { 255, 0, 0, 255 };
@@ -68,8 +67,6 @@ void Sprite::rotate(int x1, int y1) {
 	int x2 = position.x + width / 2;
 	int y2 = position.y + height / 2;
 	angle = atan2(x1 - x2, y2 - y1) * 180 / M_PI;
-
-	//cout << angle << endl;
 }
 
 void Sprite::rotate(int x1, int y1, Level* l) {
@@ -89,12 +86,20 @@ void Sprite::rotate(int x1, int y1, Level* l) {
 	angle = atan2(x1 - x2, y2 - y1) * 180 / M_PI;
 }
 
-int Sprite::getX() {
-	return position.x;
-}
+int Sprite::getX(bool getScreenPos) {
+	/*if (normalized) {
 
-int Sprite::getY() {
-	return position.y;
+	}
+	else*/
+		return position.x;
+}	
+
+int Sprite::getY(bool getScreenPos) {
+	/*if (normalized) {
+
+	}
+	else*/
+		return position.y;
 }
 
 Collider * Sprite::getCollider() {
@@ -112,8 +117,9 @@ int Sprite::getHeight() {
 
 
 
-Laser::Laser(int start_x, int start_y, int x, int y, Level* l) {
+Laser::Laser(int start_x, int start_y, int x, int y, Level* l, bool playerStarted) {
 
+	this->playerStarted = playerStarted;
 	texture = &gSpriteSheet;
 	clipRect = { 31, 56, LASER_WIDTH, LASER_HEIGHT };
 
@@ -124,7 +130,9 @@ Laser::Laser(int start_x, int start_y, int x, int y, Level* l) {
 	width = LASER_WIDTH, height = LASER_HEIGHT;
 
 	//rotate sprite
-	rotate(x, y, l);
+	if(playerStarted)
+		rotate(x, y, l);
+	else rotate(x, y);
 
 	xVel = sin(angle*M_PI/180) * LASER_VEL;
 	yVel = -cos(angle*M_PI/180) * LASER_VEL;
@@ -134,20 +142,29 @@ Laser::Laser(int start_x, int start_y, int x, int y, Level* l) {
 
 Laser::~Laser() { }
 
-void Laser::move(float timestep, Level* l) {
+void Laser::move(float timestep, Level* l, Player* player) {
 
 	position.x += xVel * timestep;
 	position.y += yVel * timestep;
 
 	collider.move(position);
 
-	for (int i = 0; i < TOTAL_ENEMIES; i++) {
-		if (checkCollision(collider.getColliderRect(), gEnemies[i]->getCollider()->getColliderRect())) {
-			gEnemies[i]->takeDamage();
-			position.x = position.y = -999;
-			break;
+	if (playerStarted) {
+		for (int i = 0; i < TOTAL_ENEMIES; i++) {
+			if (checkCollision(collider.getColliderRect(), gEnemies[i]->getCollider()->getColliderRect())) {
+				gEnemies[i]->takeDamage();
+				position.x = position.y = -999;
+				break;
+			}
 		}
 	}
+	else {
+		if (checkCollision(collider.getColliderRect(), player->getCollider()->getColliderRect())) {
+			player->takeDamage();
+			position.x = position.y = -999;
+		}
+	}
+
 	if (distance(start, position) > RANGE || position.x < 0 || position.y < 0 || position.x > l->getWidth() || position.y > l->getHeight())
 		position.x = position.y = -999;
 }
@@ -203,8 +220,14 @@ void Ship::move(float timeStep, Level* l) {
 }
 
 void Ship::attack(int x, int y, Level* l) {
-	Laser tmp(position.x + SHIP_WIDTH / 2, position.y, x, y, l);
-	
+	bool playerStarted;
+	if (type == ShipType::SHIP_TYPE_PLAYER) { 
+		playerStarted = true;
+	}
+	else playerStarted = false;
+
+	Laser tmp(position.x + SHIP_WIDTH / 2, position.y, x, y, l, playerStarted);
+
 	gLasers.push_back(tmp);
 }
 
@@ -221,14 +244,19 @@ bool Ship::isDamaged() {
 	return damaged;
 }
 
+ShipType Ship::getType() {
+	return type;
+}
 
 
 Player::Player() {
 	position.x = (gScreenWidth - SHIP_WIDTH) / 2;
 	position.y = (gScreenHeight - SHIP_HEIGHT) / 2;
-	clipRect = { 0, 28, SHIP_WIDTH, SHIP_HEIGHT };
 	
+	type = ShipType::SHIP_TYPE_PLAYER;
+
 	texture = &gSpriteSheet;
+	clipRect = { 0, 28, SHIP_WIDTH, SHIP_HEIGHT };
 
 	collider.init(position.x, position.y, SHIP_WIDTH, SHIP_HEIGHT);
 
@@ -238,10 +266,13 @@ Player::Player() {
 Player::Player(Level* l) {
 	/*position.x = (gScreenWidth - SHIP_WIDTH) / 2;
 	position.y = l->getHeight() - ((gScreenHeight + SHIP_HEIGHT) / 2);*/
-	position.x = gScreenWidth / 2;
-	position.y = gScreenHeight / 2;
-	clipRect = { 0, 28, SHIP_WIDTH, SHIP_HEIGHT };
+	position.x = (gScreenWidth - SHIP_WIDTH) / 2;
+	position.y = (gScreenHeight - SHIP_HEIGHT) / 2;
+	
+	type = ShipType::SHIP_TYPE_PLAYER;
+
 	texture = &gSpriteSheet;
+	clipRect = { 0, 28, SHIP_WIDTH, SHIP_HEIGHT };
 
 	collider.init(position.x, position.y, SHIP_WIDTH, SHIP_HEIGHT);
 }
@@ -304,10 +335,17 @@ void Player::move(float timeStep, Level *l) {
 
 
 Enemy::Enemy() {
+	position.x = rand() % (gScreenWidth - SHIP_WIDTH);
+	position.y = rand() % (gScreenHeight - SHIP_HEIGHT);
+
 	texture = &gSpriteSheet;
 	clipRect = { 0, 0, SHIP_WIDTH, SHIP_HEIGHT };
-	position.x = rand() % (gScreenWidth - Ship::SHIP_WIDTH);
-	position.y = rand() % (gScreenHeight - Ship::SHIP_HEIGHT);
+
+	health = maxHealth;
+	playerDetected = false;
+	type = ShipType::SHIP_TYPE_ENEMY;
+
+	attackTimer.start();
 
 	collider.init(position.x, position.y, SHIP_WIDTH, SHIP_HEIGHT);
 }
@@ -315,74 +353,89 @@ Enemy::Enemy() {
 Enemy::Enemy(Level* l, Player* p) {
 	texture = &gSpriteSheet;
 	clipRect = { 0, 0, SHIP_WIDTH, SHIP_HEIGHT };
+
+	health = maxHealth;
+	playerDetected = false;
+	type = ShipType::SHIP_TYPE_ENEMY;
+
+	attackTimer.start();
 }
 
-void Enemy::updatePosition(int xDisplacement, int yDisplacement, float timeStep, Level* l, Player* player) {
+void Enemy::move(float timeStep, Level* l, Player* player) {
 
-	/*position.x += xDisplacement;
-	collider.move(position);
-
-	if (position.x < 0 || position.x + SHIP_WIDTH > l->getWidth()) position.x -= xDisplacement;
-
-	//check if colliding with enemy
-	for (int i = 0; i < TOTAL_ENEMIES; i++) {
-		if (checkCollision(collider.getColliderRect(), gEnemies[i]->getCollider()->getColliderRect())) {
-			position.x -= xDisplacement;
-			collider.move(position);
-			break;
-		}
-	}
-
-	if (checkCollision(collider.getColliderRect(), player->getCollider()->getColliderRect())) {
-		position.x -= xDisplacement;
-		collider.move(position);
-	}
-
-	position.y += yDisplacement;
-
-	collider.move(position);
-
-	if (position.y < 0 || position.y + SHIP_HEIGHT > l->getHeight()) position.y -= yDisplacement;
-
-	//check if colliding with enemy
-	for (int i = 0; i < TOTAL_ENEMIES; i++) {
-		if (checkCollision(collider.getColliderRect(), gEnemies[i]->getCollider()->getColliderRect())) {
-			position.y -= yDisplacement;
-			collider.move(position);
-			break;
-		}
-	}
-	if (checkCollision(collider.getColliderRect(), player->getCollider()->getColliderRect())) {
-		position.y -= yDisplacement;
-		collider.move(position);
-	}*/
-
-
-	xDisplacement = xVel * timeStep;
-	yDisplacement = yVel * timeStep;
+	int xDisplacement = xVel * timeStep;
+	int yDisplacement = yVel * timeStep;
 
 	position.x += xDisplacement;
 	position.y += yDisplacement;
 
 	collider.move(position);
 
-	//if(collidiing with player || going out of level) decrement x, y
-	//check for CHASE_RADIUS and 
+	//if(collidiing with player || going out of level) decrement x, y and update collider
+	if (position.x < 0 || position.x + SHIP_WIDTH > l->getWidth() || 
+		position.y < 0 || position.y + SHIP_HEIGHT > l->getHeight()) {
+		
+		position.x -= xDisplacement, position.y -= yDisplacement;
+
+		angle = (angle + 180) % 360;
+		xVel = -xVel;
+		yVel = -yVel;
+		collider.move(position);
+	}
+
+	//check if colliding with other enemies
+	/*for (int i = 0; i < TOTAL_ENEMIES; i++) {
+		if (checkCollision(collider.getColliderRect(), gEnemies[i]->getCollider()->getColliderRect())) {
+			position.x -= xDisplacement, position.y -= yDisplacement;
+
+			angle = (angle + 180) % 360;
+			xVel = -xVel;
+			yVel = -yVel;
+
+			break;
+		}
+	}*/
+
+	//check if colliding with player
+	if (checkCollision(collider.getColliderRect(), player->getCollider()->getColliderRect())) {
+		position.x -= xDisplacement, position.y -= yDisplacement;
+
+		angle = (angle + 180) % 360;
+		xVel = -xVel;
+		yVel = -yVel;
+		collider.move(position);
+	}
+
+	//check for CHASE_RADIUS
 }
 
-void Enemy::move(float timeStep, Level * l, Player* player) {
+void Enemy::attack(Player* player, Level* l) {
+	if (attackTimer.getTicks() >= ATTACK_TIMEOUT) {
+		int x = player->getX() + SHIP_WIDTH / 2;
+		int y = player->getY() + SHIP_HEIGHT / 2;
+		Ship::attack(x, y, l);
+		attackTimer.start();
+	}
+}
+
+void Enemy::update(float timeStep, Level* l, Player* player, Camera* cam) {
 	
 	//check for detections
-	/*if(!playerDetected)
-		//if player is within x +|- screen_width/2 or y +|- screen_height/2 - update playerDetected and chaseStart
-	*/
+	/*if (!playerDetected) {
+		//if player is within x +|- screen_width/2 or y +|- screen_height/2 - update playerDetected
 
+	}*/
 
-	/*if (playerDetected) {
-		chase(player)
+	if (checkCollision(collider.getColliderRect(), cam->getRect())) {
+		rotate(player->getX() + SHIP_WIDTH / 2, player->getY() + SHIP_HEIGHT / 2);
+		attack(player, l);
 	}
-	updatePosition(xDisplacement, yDisplacement, l, player);
-	*/
+
+	else if (distance(original, position) > MOVEMENT_RANGE / 2) {
+		angle = (angle + 180) % 360;
+		xVel = -xVel, yVel = -yVel;
+	}
+	else move(timeStep, l, player);
 }
 
 void Enemy::chase(Player* player, Level* l) {
@@ -391,7 +444,10 @@ void Enemy::chase(Player* player, Level* l) {
 	rotate(original.x, original.y, l);
 	*/
 
-	/*else
+
+	//if enemy is in camera, attack
+
+	/*else chase
 	rotate(player->getX(), player->getY(), l);*/
 	
 	/*xVel = sin(angle*M_PI / 180) * SHIP_VEL;
@@ -399,8 +455,6 @@ void Enemy::chase(Player* player, Level* l) {
 }
 
 void Enemy::spawn(Level* l, Camera* cam) {
-	health = maxHealth;
-	playerDetected = false;
 	
 	SDL_Rect shipColliderRect;					//temp collider for new ship
 	bool success;
@@ -415,7 +469,7 @@ void Enemy::spawn(Level* l, Camera* cam) {
 		if (!checkCollision(&shipColliderRect, cam->getRect())) {
 			
 			//check if colliding with previously spawned enemies
-			for (int i = 0; i < spawnedEnemies; i++) {
+			for (int i = 0; i < gSpawnedEnemies; i++) {
 				if (checkCollision(&shipColliderRect, gEnemies[i]->getCollider()->getColliderRect())) {
 					success = false;
 					break;
@@ -424,17 +478,22 @@ void Enemy::spawn(Level* l, Camera* cam) {
 		}
 		else success = false;
 	} while (!success);
-	spawnedEnemies++;
+
+	original = position;
+	//original.x = position.x + (rand() % MOVEMENT_RANGE);
+	//original.y = position.y + (rand() % MOVEMENT_RANGE);
 
 	angle = rand() % 360;
 	xVel = sin(angle*M_PI / 180) * VEL;
 	yVel = -cos(angle*M_PI / 180) * VEL;
 
 	collider.init(position.x, position.y, SHIP_WIDTH, SHIP_HEIGHT);				//collider for new ship
+		
+	gSpawnedEnemies++;
 }
 
 void Enemy::die() {
-	spawnedEnemies--;
+	gSpawnedEnemies--;
 	gScore++;
 	cout << gScore << endl;
 	if (maxHealth < 50) {
@@ -445,6 +504,12 @@ void Enemy::die() {
 
 void Enemy::respawn(Level* l, Camera* cam) {
 	spawn(l, cam);
+
+	health = maxHealth;
+	playerDetected = false;
+	type = ShipType::SHIP_TYPE_ENEMY;
+
+	attackTimer.start();
 }
 
 void Enemy::upgrade() {

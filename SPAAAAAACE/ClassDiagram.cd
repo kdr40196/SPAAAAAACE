@@ -15,23 +15,23 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Ship" Collapsed="true">
-    <Position X="6.25" Y="2.75" Width="1.75" />
+    <Position X="6.25" Y="2" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>AIAAAAEAAAAAAAiAAAAgAAAAAACABAiAIAAAAAAAAQg=</HashCode>
+      <HashCode>AIAAAAEAAAAAAAiAAAAgAAAAAQCBBAiAIAAAAAAAAQg=</HashCode>
       <FileName>sprite.hpp</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Player" Collapsed="true">
-    <Position X="5.5" Y="4.5" Width="1.5" />
+    <Position X="5.5" Y="4" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AIAABAAIAAAAAACAAAAAAAAAAAAAAACAAAAAAQAAAAA=</HashCode>
       <FileName>sprite.hpp</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Enemy" Collapsed="true">
-    <Position X="7.25" Y="4.5" Width="1.5" />
+    <Position X="7.25" Y="4" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAgAIACAAAAAAAAAAAAABIAAAAASAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAkBgAIACACAACAAAAAAAABIABAAASAAAIAAAgEAAA=</HashCode>
       <FileName>sprite.hpp</FileName>
     </TypeIdentifier>
   </Class>
@@ -64,9 +64,9 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Laser" Collapsed="true">
-    <Position X="8.5" Y="2.75" Width="1.5" />
+    <Position X="8.5" Y="2" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AIAAEAAAAAAAAAigAAgAAAQAAAAAAAAEAABCAAAAAQA=</HashCode>
+      <HashCode>AIAAEAAAAAAAAACgAAgAAAQAAAAAAAAEoABCAAAAAQA=</HashCode>
       <FileName>sprite.hpp</FileName>
     </TypeIdentifier>
   </Class>

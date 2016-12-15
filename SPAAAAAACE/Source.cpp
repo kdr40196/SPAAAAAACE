@@ -4,7 +4,7 @@ int main(int argc, char** argv) {
 	if (!init()) return -1;
 
 	if (!loadMedia()) return -1;
-	Level level(2000, 2000);
+	Level level(3000, 3000);
 
 	Player player(&level);
 	Camera cam;
@@ -32,7 +32,7 @@ int main(int argc, char** argv) {
 		cam.move(&player, &level);
 		
 		for (int i = 0; i < gLasers.size(); i++) {
-			gLasers[i].move(timeStep, &level);
+			gLasers[i].move(timeStep, &level, &player);
 		}
 
 		stepTimer.start();
@@ -54,7 +54,7 @@ int main(int argc, char** argv) {
 					gEnemies[i]->die();
 					gEnemies[i]->respawn(&level, &cam);
 				}
-				gEnemies[i]->move(timeStep, &level, &player);
+				gEnemies[i]->update(timeStep, &level, &player, &cam);
 				gEnemies[i]->render(&cam);
 			}
 			SDL_RenderPresent(gRenderer);

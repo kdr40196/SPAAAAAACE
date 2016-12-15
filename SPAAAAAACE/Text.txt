@@ -1,12 +1,10 @@
-improve move functions
-
+enemy colliging with each other
 
 AI
-	add enemy states - IDLE, PLAYER_DETECTED, CHASING, RETURNING - enum
+	maybe - add enemy states - IDLE, PLAYER_DETECTED, CHASING, RETURNING
 	add original position, angle so enemies can return to IDLE state
 	improve Enemy::move()
 
-	add random rotation to enemies
 
 more accurate colliders
 	per pixel collision and collider rotation
