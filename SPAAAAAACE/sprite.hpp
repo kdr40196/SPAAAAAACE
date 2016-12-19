@@ -38,7 +38,7 @@ class Sprite {
 class Ship : public Sprite {
 	protected:
 		int xVel, yVel;
-		int health;
+		float health;
 		bool damaged;
 		ShipType type;
 	public:
@@ -56,19 +56,26 @@ class Ship : public Sprite {
 
 class Player : public Ship {
 	Camera* cam;
+	Timer hitTimer;
 	public:
 		static const SDL_Color color;
 		static int maxHealth;
+		
+		//regenerate after 3 secs without a hit
+		static const int REGENERATE = 20, REGENERATE_AFTER = 3000;
+		
 		Player();
 		Player(Level*);
 		void handleInput(SDL_Event& e, Level* l);
+		void update(float timeStep, Level* l);
 		void move(float timeStep, Level* l);
-		//int getHealth();
+		void takeDamage();
+		void regenerate(float timeStep);
 };
 
 class Enemy :public Ship {
 	SDL_Point original;
-	static const int MOVEMENT_RANGE = 800, CHASE_RADIUS = 1000, ATTACK_TIMEOUT = 500;
+	static const int MOVEMENT_RANGE = 800, CHASE_RADIUS = 1000, ATTACK_TIMEOUT = 1000;
 	bool playerDetected;
 	Timer attackTimer;
 	public:
@@ -81,6 +88,7 @@ class Enemy :public Ship {
 		void attack(Player* player, Level* l);
 		void chase(Player* player, Level* l);
 		void spawn(Level*, Camera*);
+		void takeDamage();
 		void die();
 		void respawn(Level*, Camera*);
 		void upgrade();

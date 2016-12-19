@@ -21,4 +21,4 @@ void close();
 bool loadMedia();
 
 void updateLasers();
-void updateEnemies();
+void updateEnemies(float, Level*, Player*, Camera*);

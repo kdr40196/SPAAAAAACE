@@ -46,8 +46,16 @@ void updateLasers() {
 	}
 }
 
-void updateEnemies() {
+void updateEnemies(float timeStep, Level* level, Player* player, Camera* cam) {
 	for (int i = 0; i < TOTAL_ENEMIES; i++) {
 		if (!gEnemies[i]->isDamaged()) gEnemies[i]->upgrade();
+	}
+	for (int i = 0; i < TOTAL_ENEMIES; i++) {
+		if (gEnemies[i]->getHealth() <= 0) {
+			gEnemies[i]->die();
+			gEnemies[i]->respawn(level, cam);
+		}
+		gEnemies[i]->update(timeStep, level, player, cam);
+		gEnemies[i]->render(cam);
 	}
 }

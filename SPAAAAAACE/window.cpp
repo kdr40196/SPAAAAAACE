@@ -5,7 +5,7 @@ using namespace std;
 
 Window gWindow;
 SDL_Renderer* gRenderer = nullptr;
-int gScreenWidth = 1024, gScreenHeight = 576;
+int gScreenWidth = 720, gScreenHeight = 480;
 
 Window::Window() {
 	window = nullptr;

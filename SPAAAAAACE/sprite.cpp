@@ -12,7 +12,7 @@ int gSpawnedEnemies = 0, gScore = 0;
 
 const SDL_Color Player::color = {0, 0, 255, 255};
 const SDL_Color Enemy::color = { 255, 0, 0, 255 };
-int Player::maxHealth = 50;
+int Player::maxHealth = 100;
 int Enemy::maxHealth = 15;
 
 bool checkCollision(SDL_Rect* a, SDL_Rect* b) {
@@ -162,6 +162,7 @@ void Laser::move(float timestep, Level* l, Player* player) {
 		if (checkCollision(collider.getColliderRect(), player->getCollider()->getColliderRect())) {
 			player->takeDamage();
 			position.x = position.y = -999;
+			cout << "Health: " << player->getHealth() << endl;
 		}
 	}
 
@@ -270,6 +271,7 @@ Player::Player(Level* l) {
 	position.y = (gScreenHeight - SHIP_HEIGHT) / 2;
 	
 	type = ShipType::SHIP_TYPE_PLAYER;
+	health = maxHealth;
 
 	texture = &gSpriteSheet;
 	clipRect = { 0, 28, SHIP_WIDTH, SHIP_HEIGHT };
@@ -324,12 +326,30 @@ void Player::handleInput(SDL_Event& e, Level* l) {
 	}
 }
 
+void Player::update(float timeStep, Level * l) {
+	move(timeStep, l);
+	if (health < maxHealth && hitTimer.getTicks() > REGENERATE_AFTER) {
+		regenerate(timeStep);
+	}
+}
+
 void Player::move(float timeStep, Level *l) {
 	Ship::move(timeStep, l);
 
 	int x, y;
 	SDL_GetMouseState(&x, &y);
 	rotate(x, y, l);
+}
+
+void Player::takeDamage() {
+	Ship::takeDamage();
+	hitTimer.start();
+}
+
+void Player::regenerate(float timeStep) {
+	health += timeStep * ((maxHealth - health) / 100) * REGENERATE;
+	if (health > maxHealth) health = maxHealth;
+	//cout << health << endl;
 }
 
 
@@ -492,13 +512,16 @@ void Enemy::spawn(Level* l, Camera* cam) {
 	gSpawnedEnemies++;
 }
 
+void Enemy::takeDamage() {
+	Ship::takeDamage();
+}
+
 void Enemy::die() {
 	gSpawnedEnemies--;
 	gScore++;
 	cout << gScore << endl;
 	if (maxHealth < 50) {
 		maxHealth++;
-		cout << "Enemy Max Health: " << maxHealth << endl;
 	}
 }
 

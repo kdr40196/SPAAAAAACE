@@ -1,9 +1,15 @@
-enemy colliding with each other
+check enemy collision
 
 AI
 	maybe - add enemy states - IDLE, PLAYER_DETECTED, CHASING, RETURNING
-	add original position, angle so enemies can return to IDLE state
-	improve Enemy::move()
+	add original position, original angle so enemies can return to IDLE state
+
+
+UI
+	display score, health
+	main menu - PLAY, EXIT
+	GAME OVER - PLAY AGAIN, EXIT
+	pause menu - RESUME, EXIT
 
 
 more accurate colliders
