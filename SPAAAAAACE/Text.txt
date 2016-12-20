@@ -1,9 +1,3 @@
-check enemy collision
-
-AI
-	maybe - add enemy states - IDLE, PLAYER_DETECTED, CHASING, RETURNING
-	add original position, original angle so enemies can return to IDLE state
-
 
 UI
 	display score, health

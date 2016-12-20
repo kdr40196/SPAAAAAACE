@@ -15,6 +15,10 @@ const SDL_Color Enemy::color = { 255, 0, 0, 255 };
 int Player::maxHealth = 100;
 int Enemy::maxHealth = 15;
 
+int distance(SDL_Point a, SDL_Point b) {
+	return sqrt((a.x - b.x)*(a.x - b.x) + (a.y - b.y)*(a.y - b.y));
+}
+
 bool checkCollision(SDL_Rect* a, SDL_Rect* b) {
 	int leftA, leftB, rightA, rightB, topA, topB, bottomA, bottomB;
 	leftA = a->x;
@@ -28,13 +32,32 @@ bool checkCollision(SDL_Rect* a, SDL_Rect* b) {
 	bottomB = b->y + b->h;
 
 	if (topA >= bottomB || bottomA <= topB || rightA <= leftB || leftA >= rightB) return false;
+	
 	return true;
+}
+
+bool checkCollision(Circle* a, SDL_Rect* b) {
+	int cX, cY;					//closest x, y
+
+	if (a->x < b->x)
+		cX = b->x;
+	else if (a->x > b->x + b->w)
+		cX = b->x + b->w;
+	else cX = a->x;
+
+	if (a->y < b->y)
+		cY = b->y;
+	else if (a->y > b->y + b->h)
+		cY = b->y + b->h;
+	else cY = a->y;
+
+	if (distance({ cX, cY }, { a->x, a->y }) < a->r)
+		return true;
+
 	return false;
 }
 
-int distance(SDL_Point a, SDL_Point b) {
-	return sqrt((a.x - b.x)*(a.x - b.x) + (a.y - b.y)*(a.y - b.y));
-}
+
 
 Sprite::Sprite() {
 	angle = 0;
@@ -265,8 +288,6 @@ Player::Player() {
 }
 
 Player::Player(Level* l) {
-	/*position.x = (gScreenWidth - SHIP_WIDTH) / 2;
-	position.y = l->getHeight() - ((gScreenHeight + SHIP_HEIGHT) / 2);*/
 	position.x = (gScreenWidth - SHIP_WIDTH) / 2;
 	position.y = (gScreenHeight - SHIP_HEIGHT) / 2;
 	
@@ -355,6 +376,7 @@ void Player::regenerate(float timeStep) {
 
 
 Enemy::Enemy() {
+	id = gSpawnedEnemies;
 	position.x = rand() % (gScreenWidth - SHIP_WIDTH);
 	position.y = rand() % (gScreenHeight - SHIP_HEIGHT);
 
@@ -364,6 +386,7 @@ Enemy::Enemy() {
 	health = maxHealth;
 	playerDetected = false;
 	type = ShipType::SHIP_TYPE_ENEMY;
+	state = EnemyState::IDLE;
 
 	attackTimer.start();
 
@@ -371,17 +394,29 @@ Enemy::Enemy() {
 }
 
 Enemy::Enemy(Level* l, Player* p) {
+	id = gSpawnedEnemies;
 	texture = &gSpriteSheet;
 	clipRect = { 0, 0, SHIP_WIDTH, SHIP_HEIGHT };
 
 	health = maxHealth;
 	playerDetected = false;
 	type = ShipType::SHIP_TYPE_ENEMY;
+	state = EnemyState::IDLE;
 
 	attackTimer.start();
 }
 
+int Enemy::getId() {
+	return id;
+}
+
 void Enemy::move(float timeStep, Level* l, Player* player) {
+
+	if (distance(original, position) > MOVEMENT_RANGE / 2) {
+		angle = (angle + 180) % 360;
+		xVel = -xVel, yVel = -yVel;
+		//move(timeStep, l, player);
+	}
 
 	int xDisplacement = xVel * timeStep;
 	int yDisplacement = yVel * timeStep;
@@ -404,8 +439,9 @@ void Enemy::move(float timeStep, Level* l, Player* player) {
 	}
 
 	//check if colliding with other enemies
-	/*for (int i = 0; i < TOTAL_ENEMIES; i++) {
-		if (checkCollision(collider.getColliderRect(), gEnemies[i]->getCollider()->getColliderRect())) {
+	for (int i = 0; i < TOTAL_ENEMIES; i++) {
+		if (this->id != gEnemies[i]->getId() && checkCollision(collider.getColliderRect(), gEnemies[i]->getCollider()->getColliderRect())) {
+			
 			position.x -= xDisplacement, position.y -= yDisplacement;
 
 			angle = (angle + 180) % 360;
@@ -414,7 +450,7 @@ void Enemy::move(float timeStep, Level* l, Player* player) {
 
 			break;
 		}
-	}*/
+	}
 
 	//check if colliding with player
 	if (checkCollision(collider.getColliderRect(), player->getCollider()->getColliderRect())) {
@@ -426,7 +462,8 @@ void Enemy::move(float timeStep, Level* l, Player* player) {
 		collider.move(position);
 	}
 
-	//check for CHASE_RADIUS
+	radar.x = position.x, radar.y = position.y;
+
 }
 
 void Enemy::attack(Player* player, Level* l) {
@@ -438,50 +475,39 @@ void Enemy::attack(Player* player, Level* l) {
 	}
 }
 
-void Enemy::update(float timeStep, Level* l, Player* player, Camera* cam) {
-	
-	//check for detections
-	/*if (!playerDetected) {
-		//if player is within x +|- screen_width/2 or y +|- screen_height/2 - update playerDetected
+void Enemy::update(float timeStep, Level* level, Player* player) {
 
-	}*/
+	//check if player detected
+	if (checkCollision(&radar, player->getCollider()->getColliderRect())) {
+		if (state == EnemyState::IDLE || state == EnemyState::RETURNING_TO_IDLE)
+			originalAngle = angle;
 
-	if (checkCollision(collider.getColliderRect(), cam->getRect())) {
 		rotate(player->getX() + SHIP_WIDTH / 2, player->getY() + SHIP_HEIGHT / 2);
-		attack(player, l);
+		state = EnemyState::ATTACKING;
+		attack(player, level);
 	}
-
-	else if (distance(original, position) > MOVEMENT_RANGE / 2) {
-		angle = (angle + 180) % 360;
-		xVel = -xVel, yVel = -yVel;
+	else {
+		if (state == EnemyState::ATTACKING) {
+			state = EnemyState::RETURNING_TO_IDLE;
+			angle = originalAngle;
+		}
+		else if (state == EnemyState::RETURNING_TO_IDLE) {
+			EnemyState::IDLE;
+			move(timeStep, level, player);
+		}
+		else if(state == EnemyState::IDLE)
+			move(timeStep, level, player);
 	}
-	else move(timeStep, l, player);
 }
 
-void Enemy::chase(Player* player, Level* l) {
-	//check for chase radius - if out of range then return to original position
-	/*
-	rotate(original.x, original.y, l);
-	*/
-
-
-	//if enemy is in camera, attack
-
-	/*else chase
-	rotate(player->getX(), player->getY(), l);*/
-	
-	/*xVel = sin(angle*M_PI / 180) * SHIP_VEL;
-	yVel = -cos(angle*M_PI / 180) * SHIP_VEL;*/
-}
-
-void Enemy::spawn(Level* l, Camera* cam) {
+void Enemy::spawn(Level* level, Camera* cam) {
 	
 	SDL_Rect shipColliderRect;					//temp collider for new ship
 	bool success;
 	do {
 		success = true;
-		position.x = rand() % (l->getWidth() - SHIP_WIDTH);
-		position.y = rand() % (l->getHeight() - SHIP_HEIGHT);
+		position.x = rand() % (level->getWidth() - SHIP_WIDTH);
+		position.y = rand() % (level->getHeight() - SHIP_HEIGHT);
 
 		shipColliderRect = { position.x, position.y, SHIP_WIDTH, SHIP_HEIGHT };
 		
@@ -490,7 +516,7 @@ void Enemy::spawn(Level* l, Camera* cam) {
 			
 			//check if colliding with previously spawned enemies
 			for (int i = 0; i < gSpawnedEnemies; i++) {
-				if (checkCollision(&shipColliderRect, gEnemies[i]->getCollider()->getColliderRect())) {
+				if (this->id != gEnemies[i]->getId() && checkCollision(&shipColliderRect, gEnemies[i]->getCollider()->getColliderRect())) {
 					success = false;
 					break;
 				}
@@ -500,15 +526,15 @@ void Enemy::spawn(Level* l, Camera* cam) {
 	} while (!success);
 
 	original = position;
-	//original.x = position.x + (rand() % MOVEMENT_RANGE);
-	//original.y = position.y + (rand() % MOVEMENT_RANGE);
 
-	angle = rand() % 360;
+	originalAngle = angle = rand() % 360;
 	xVel = sin(angle*M_PI / 180) * VEL;
 	yVel = -cos(angle*M_PI / 180) * VEL;
 
 	collider.init(position.x, position.y, SHIP_WIDTH, SHIP_HEIGHT);				//collider for new ship
-		
+
+	radar = { position.x, position.y, RADAR_RADIUS };
+
 	gSpawnedEnemies++;
 }
 
@@ -537,4 +563,8 @@ void Enemy::respawn(Level* l, Camera* cam) {
 
 void Enemy::upgrade() {
 	health = maxHealth;
+}
+
+EnemyState Enemy::getState() {
+	return state;
 }

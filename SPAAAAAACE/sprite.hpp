@@ -8,10 +8,13 @@ class Camera;
 class Texture;
 class Level;
 
+struct Circle { int x, y, r; };
 
 bool checkCollision(SDL_Rect* a, SDL_Rect* b);
 
 enum class ShipType { SHIP_TYPE_PLAYER, SHIP_TYPE_ENEMY };
+
+enum class EnemyState { IDLE, ATTACKING, RETURNING_TO_IDLE };
 
 
 class Sprite {
@@ -46,8 +49,8 @@ class Ship : public Sprite {
 		static const int SHIP_WIDTH = 64, SHIP_HEIGHT = 28;
 		Ship();
 		Ship(string path);
-		void move(float timeStep, Level* l);
-		void attack(int x, int y, Level* l);
+		void move(float timeStep, Level* level);
+		void attack(int x, int y, Level* level);
 		void takeDamage();
 		int getHealth();
 		bool isDamaged();
@@ -66,32 +69,36 @@ class Player : public Ship {
 		
 		Player();
 		Player(Level*);
-		void handleInput(SDL_Event& e, Level* l);
-		void update(float timeStep, Level* l);
-		void move(float timeStep, Level* l);
+		void handleInput(SDL_Event& e, Level* level);
+		void update(float timeStep, Level* level);
+		void move(float timeStep, Level* level);
 		void takeDamage();
 		void regenerate(float timeStep);
 };
 
 class Enemy :public Ship {
+	int id, originalAngle;
+	Circle radar;
 	SDL_Point original;
-	static const int MOVEMENT_RANGE = 800, CHASE_RADIUS = 1000, ATTACK_TIMEOUT = 1000;
+	static const int MOVEMENT_RANGE = 800, RADAR_RADIUS = 200, ATTACK_TIMEOUT = 1000;
 	bool playerDetected;
 	Timer attackTimer;
+	EnemyState state;
 	public:
 		static const SDL_Color color;
 		static int maxHealth;
 		Enemy();
 		Enemy(Level*, Player*);
-		void update(float timeStep, Level* l, Player* player, Camera* cam);
-		void move(float timeStep, Level* l, Player* player);
-		void attack(Player* player, Level* l);
-		void chase(Player* player, Level* l);
+		int getId();
+		void update(float timeStep, Level* level, Player* player);
+		void move(float timeStep, Level* level, Player* player);
+		void attack(Player* player, Level* level);
 		void spawn(Level*, Camera*);
 		void takeDamage();
 		void die();
 		void respawn(Level*, Camera*);
 		void upgrade();
+		EnemyState getState();
 };
 
 class Laser : public Sprite {

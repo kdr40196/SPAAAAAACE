@@ -55,7 +55,7 @@ void updateEnemies(float timeStep, Level* level, Player* player, Camera* cam) {
 			gEnemies[i]->die();
 			gEnemies[i]->respawn(level, cam);
 		}
-		gEnemies[i]->update(timeStep, level, player, cam);
+		gEnemies[i]->update(timeStep, level, player);
 		gEnemies[i]->render(cam);
 	}
 }
