@@ -37,7 +37,7 @@ int main(int argc, char** argv) {
 
 		stepTimer.start();
 		if (!gWindow.isMinimized()) {
-			SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 255);
+			SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 200);
 			SDL_RenderClear(gRenderer);
 
 			updateLasers();
@@ -50,6 +50,8 @@ int main(int argc, char** argv) {
 			
 			updateEnemies(timeStep, &level, &player, &cam);
 			
+			updateInfo(&player);
+
 			SDL_RenderPresent(gRenderer);
 		}
 

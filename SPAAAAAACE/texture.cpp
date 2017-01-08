@@ -1,6 +1,8 @@
 #pragma once
 #include"texture.hpp"
 #include"g.hpp"
+#include"font.hpp"
+#include<string>
 
 Texture::Texture() {
 	texture = nullptr;
@@ -31,7 +33,7 @@ void Texture::free() {
 	}
 }
 
-bool Texture::loadTexture(string path, Uint32 color) {
+bool Texture::loadTextureFromImage(string path, Uint32 color) {
 	free();
 	SDL_Surface* surface = IMG_Load(path.c_str());
 	if (surface == nullptr) {
@@ -111,7 +113,24 @@ bool Texture::loadTexture(string path, Uint32 color) {
 	return true;
 }*/
 
-void Texture::render(int x, int y, SDL_Rect* clipRect, double angle, 
+bool Texture::loadTextureFromText(string text, SDL_Color color) {
+	free();
+	SDL_Surface* textSurface = TTF_RenderText_Blended_Wrapped(gFont.getFont(), text.c_str(), color, 300);
+	if (textSurface == nullptr) {
+		cout << "Unable to create text surface: " << SDL_GetError() << endl;
+		return false;
+	}
+	texture = SDL_CreateTextureFromSurface(gRenderer, textSurface);
+	if (texture == nullptr) {
+		cout << "Unable to create text texture: " << text << endl;
+		return false;
+	}
+	width = textSurface->w, height = textSurface->h;
+	SDL_FreeSurface(textSurface);
+	return true;
+}
+
+void Texture::render(int x, int y, SDL_Rect* clipRect, double angle,
 	SDL_Point* center) {
 	
 	SDL_Rect renderRect;
@@ -127,6 +146,13 @@ void Texture::render(int x, int y, SDL_Rect* clipRect, double angle,
 	}
 	SDL_RenderCopyEx(gRenderer, texture, clipRect, &renderRect, angle, center, SDL_FLIP_NONE);
 }
+
+/*void Texture::render(int x, int y, Viewport viewport, SDL_Rect * clipRect, double angle, SDL_Point * center) {
+	SDL_Rect viewportRect = viewport.getViewPortRect();
+	int final_x = x + (gScreenWidth - viewportRect.w);
+	int final_y = y + (gScreenHeight - viewportRect.h);
+	render(final_x, final_y, clipRect, angle, center);
+}*/
 
 int Texture::getWidth() { return width; }
 

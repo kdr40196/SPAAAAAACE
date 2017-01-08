@@ -1,6 +1,7 @@
 
+enemy attack cooldown
+
 UI
-	display score, health
 	main menu - PLAY, EXIT
 	GAME OVER - PLAY AGAIN, EXIT
 	pause menu - RESUME, EXIT

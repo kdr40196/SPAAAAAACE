@@ -3,7 +3,6 @@
 #include"camera.hpp"
 #include"g.hpp"
 #include<cmath>
-#include<typeinfo>
 
 Texture gSpriteSheet;
 Enemy* gEnemies[TOTAL_ENEMIES];
@@ -69,7 +68,7 @@ Sprite::Sprite() {
 Sprite::Sprite(string path) {
 	angle = 0;
 	texture = new Texture();
-	if (!texture->loadTexture(path)) exit(-1);
+	if (!texture->loadTextureFromImage(path)) exit(-1);
 	width = texture->getWidth();
 	height = texture->getHeight();
 }
@@ -204,7 +203,7 @@ Ship::Ship() {
 
 Ship::Ship(string path) {
 	position.y = gScreenHeight - Ship::SHIP_HEIGHT;
-	if (!texture->loadTexture(path)) exit(-1);
+	if (!texture->loadTextureFromImage(path)) exit(-1);
 	width = SHIP_WIDTH;
 	height = SHIP_HEIGHT;
 }
@@ -350,7 +349,10 @@ void Player::handleInput(SDL_Event& e, Level* l) {
 void Player::update(float timeStep, Level * l) {
 	move(timeStep, l);
 	if (health < maxHealth && hitTimer.getTicks() > REGENERATE_AFTER) {
-		regenerate(timeStep);
+		if (!regenerateTimer.isStarted()) {
+			regenerateTimer.start();
+		}
+		regenerate();
 	}
 }
 
@@ -367,10 +369,15 @@ void Player::takeDamage() {
 	hitTimer.start();
 }
 
-void Player::regenerate(float timeStep) {
-	health += timeStep * ((maxHealth - health) / 100) * REGENERATE;
-	if (health > maxHealth) health = maxHealth;
-	//cout << health << endl;
+void Player::regenerate() {
+	if (regenerateTimer.getTicks() > REGENERATE_TIMEOUT) {
+		health += REGENERATE_RATE;
+		regenerateTimer.start();
+	}
+	if (health > maxHealth) {
+		health = maxHealth;
+		regenerateTimer.stop();
+	}
 }
 
 
@@ -462,7 +469,7 @@ void Enemy::move(float timeStep, Level* l, Player* player) {
 		collider.move(position);
 	}
 
-	radar.x = position.x, radar.y = position.y;
+	attackRadar.x = position.x, attackRadar.y = position.y;
 
 }
 
@@ -478,7 +485,7 @@ void Enemy::attack(Player* player, Level* l) {
 void Enemy::update(float timeStep, Level* level, Player* player) {
 
 	//check if player detected
-	if (checkCollision(&radar, player->getCollider()->getColliderRect())) {
+	if (checkCollision(&attackRadar, player->getCollider()->getColliderRect())) {
 		if (state == EnemyState::IDLE || state == EnemyState::RETURNING_TO_IDLE)
 			originalAngle = angle;
 
@@ -533,7 +540,7 @@ void Enemy::spawn(Level* level, Camera* cam) {
 
 	collider.init(position.x, position.y, SHIP_WIDTH, SHIP_HEIGHT);				//collider for new ship
 
-	radar = { position.x, position.y, RADAR_RADIUS };
+	attackRadar = { position.x, position.y, ATTACK_RADAR_RADIUS };
 
 	gSpawnedEnemies++;
 }

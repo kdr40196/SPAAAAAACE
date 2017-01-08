@@ -4,7 +4,7 @@
 #include"sprite.hpp"
 
 Camera::Camera() {
-	cameraRect = {0, 0, gScreenWidth, gScreenHeight};
+	cameraRect = { 0, 0, gScreenWidth, gScreenHeight };
 }
 
 void Camera::move(Player* ship, Level* l) {

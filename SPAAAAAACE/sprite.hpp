@@ -14,7 +14,7 @@ bool checkCollision(SDL_Rect* a, SDL_Rect* b);
 
 enum class ShipType { SHIP_TYPE_PLAYER, SHIP_TYPE_ENEMY };
 
-enum class EnemyState { IDLE, ATTACKING, RETURNING_TO_IDLE };
+enum class EnemyState { IDLE, ATTACKING, COOLDOWN, RETURNING_TO_IDLE };
 
 
 class Sprite {
@@ -59,13 +59,13 @@ class Ship : public Sprite {
 
 class Player : public Ship {
 	Camera* cam;
-	Timer hitTimer;
+	Timer hitTimer, regenerateTimer;
 	public:
 		static const SDL_Color color;
 		static int maxHealth;
 		
 		//regenerate after 3 secs without a hit
-		static const int REGENERATE = 20, REGENERATE_AFTER = 3000;
+		static const int REGENERATE_RATE = 1, REGENERATE_TIMEOUT = 500, REGENERATE_AFTER = 3000;
 		
 		Player();
 		Player(Level*);
@@ -73,14 +73,14 @@ class Player : public Ship {
 		void update(float timeStep, Level* level);
 		void move(float timeStep, Level* level);
 		void takeDamage();
-		void regenerate(float timeStep);
+		void regenerate();
 };
 
 class Enemy :public Ship {
 	int id, originalAngle;
-	Circle radar;
+	Circle attackRadar;
 	SDL_Point original;
-	static const int MOVEMENT_RANGE = 800, RADAR_RADIUS = 200, ATTACK_TIMEOUT = 1000;
+	static const int MOVEMENT_RANGE = 800, ATTACK_RADAR_RADIUS = 200, ATTACK_TIMEOUT = 1000;
 	bool playerDetected;
 	Timer attackTimer;
 	EnemyState state;
