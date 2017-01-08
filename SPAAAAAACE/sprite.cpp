@@ -495,8 +495,17 @@ void Enemy::update(float timeStep, Level* level, Player* player) {
 	}
 	else {
 		if (state == EnemyState::ATTACKING) {
-			state = EnemyState::RETURNING_TO_IDLE;
-			angle = originalAngle;
+			if (!cooldownTimer.isStarted()) {
+				cooldownTimer.start();
+				state = EnemyState::COOLDOWN;
+			}
+		}
+		else if(state == EnemyState::COOLDOWN){
+			if (cooldownTimer.getTicks() >= COOLDOWN_TIME) {
+				state = EnemyState::RETURNING_TO_IDLE;
+				angle = originalAngle;
+				cooldownTimer.stop();
+			}
 		}
 		else if (state == EnemyState::RETURNING_TO_IDLE) {
 			EnemyState::IDLE;

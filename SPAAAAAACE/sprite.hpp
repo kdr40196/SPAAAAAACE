@@ -80,9 +80,9 @@ class Enemy :public Ship {
 	int id, originalAngle;
 	Circle attackRadar;
 	SDL_Point original;
-	static const int MOVEMENT_RANGE = 800, ATTACK_RADAR_RADIUS = 200, ATTACK_TIMEOUT = 1000;
+	static const int MOVEMENT_RANGE = 800, ATTACK_RADAR_RADIUS = 200, ATTACK_TIMEOUT = 1000, COOLDOWN_TIME = 3000;
 	bool playerDetected;
-	Timer attackTimer;
+	Timer attackTimer, cooldownTimer;
 	EnemyState state;
 	public:
 		static const SDL_Color color;
