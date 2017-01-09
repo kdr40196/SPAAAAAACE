@@ -3,11 +3,12 @@
 #include<vector>
 #include<memory>
 #include"text.hpp"
+#include"button.hpp"
 using namespace std;
 
 
 class Menu {
-	vector<shared_ptr<Text>> items;
+	vector<shared_ptr<TextButton>> items;
 	Text title;
 	int noOfItems, currentIndex;
 	public:

@@ -76,39 +76,38 @@ int main(int argc, char** argv) {
 						pause(player);
 					}
 					break;
-				
-				default:
-					if (paused) {
-						action = pauseMenu.handleInput(e);
-						if (action == "RESUME") {
-							paused = false;
-						}
-						else if (action == "RESTART") {
-							start(&level, &player, &cam);
-							quit = paused = gameOver = false;
-							continue;
-						}
-						else if (action == "EXIT") {
-							quit = true;
-							continue;
-						}
-					}
-					else if (gameOver) {
-						action = gameOverMenu.handleInput(e);
-						if (action == "PLAY AGAIN") {
-							start(&level, &player, &cam);
-							quit = paused = gameOver = false;
-							continue;
-						}
-						else if (action == "EXIT") {
-							quit = true;
-							continue;
-						}
-					}
+				}
+			}
+			//default:
+			if (paused) {
+				action = pauseMenu.handleInput(e);
+				if (action == "RESUME") {
+					paused = false;
+				}
+				else if (action == "RESTART") {
+					start(&level, &player, &cam);
+					quit = paused = gameOver = false;
+					continue;
+				}
+				else if (action == "EXIT") {
+					quit = true;
+					continue;
+				}
+			}
+			else if (gameOver) {
+				action = gameOverMenu.handleInput(e);
+				if (action == "PLAY AGAIN") {
+					start(&level, &player, &cam);
+					quit = paused = gameOver = false;
+					continue;
+				}
+				else if (action == "EXIT") {
+					quit = true;
+					continue;
 				}
 			}
 
-			if(!paused && !gameOver)
+			if (!paused && !gameOver)
 				player->handleInput(e, level);
 		}
 		

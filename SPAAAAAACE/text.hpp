@@ -34,6 +34,7 @@ class Text {
 		Font* getFont();
 		int getTextWidth();
 		int getTextHeight();
+		shared_ptr<Texture> getTextTexture();
 };
 
 extern Text scoreText, healthText, scorePrompt, healthPrompt, gMenuItemPointer;

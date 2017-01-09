@@ -14,22 +14,22 @@ void Menu::addMenuTitle(string text) {
 }
 
 void Menu::addMenuItem(string text) {
-	Text item(text, &gSmallFont);
+	TextButton item(0, 0, new Text(text, &gSmallFont));
 	if (noOfItems == 0) {
 		item.setPosition(gScreenWidth / 4, gScreenHeight / 2);
 		currentIndex = 0;
 	}
 	else {
-		item.setPosition(gScreenWidth / 4, items[noOfItems - 1]->getY() + items[noOfItems - 1]->getTextHeight());
+		item.setPosition(gScreenWidth / 4, items[noOfItems - 1]->getY() + items[noOfItems - 1]->getHeight());
 	}
-	items.push_back(make_shared<Text>(item));
+	items.push_back(make_shared<TextButton>(item));
 	noOfItems++;
 	refresh();
 }
 
 void Menu::refresh() {
 	for (int i = 0; i < noOfItems; i++) {
-		items[i]->setPosition(items[i]->getX(), items[i]->getY() - items[i]->getTextHeight() / 2);
+		items[i]->setPosition(items[i]->getX(), items[i]->getY() - items[i]->getHeight() / 2);
 	}
 }
 
@@ -58,8 +58,31 @@ string Menu::handleInput(SDL_Event& e) {
 			break;
 
 		case SDLK_RETURN:
-			action = items[currentIndex]->getText();
+			action = items[currentIndex]->getButtonText();
 			currentIndex = 0;
+
+		}
+	}
+	else if (e.type == SDL_MOUSEMOTION) {
+		int x, y;
+		SDL_GetMouseState(&x, &y);
+		for (int i = 0; i < noOfItems; i++) {
+			if (x >= items[i]->getX() && x <= items[i]->getX() + items[i]->getWidth() && y >= items[i]->getY() && y <= items[i]->getY() + items[i]->getHeight()) {
+				currentIndex = i;
+				break;
+			}
+		}
+	}
+	else if (e.type == SDL_MOUSEBUTTONDOWN) {
+		int x, y;
+		SDL_GetMouseState(&x, &y);
+		for (int i = 0; i < noOfItems; i++) {
+			if (x >= items[i]->getX() && x <= items[i]->getX() + items[i]->getWidth() && y >= items[i]->getY() && y <= items[i]->getY() + items[i]->getHeight()) {
+				currentIndex = i;
+				action = items[currentIndex]->getButtonText();
+				currentIndex = 0;
+				break;
+			}
 		}
 	}
 	return action;

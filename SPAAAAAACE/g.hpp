@@ -1,6 +1,7 @@
 #pragma once
 
 #include<vector>
+#include<memory>
 #include"window.hpp"
 #include"sprite.hpp"
 
@@ -16,7 +17,7 @@ extern int gSpawnedEnemies;							//total spawned enemies - ++ on spawing, -- on
 extern int gScreenWidth, gScreenHeight;
 extern Window gWindow;
 extern SDL_Renderer* gRenderer;
-extern Texture gSpriteSheet;						//texture storing ship images and maybe projectile image
+extern shared_ptr<Texture> gSpriteSheet;						//texture storing ship images and maybe projectile image
 extern Enemy** gEnemies;							//references to all enemy ships
 extern vector<Laser> gLasers;
 extern Font gSmallFont, gLargeFont;

@@ -1,5 +1,6 @@
 #pragma once
 #include<iostream>
+#include<memory>
 #include"collider.hpp"
 #include"timer.hpp"
 using namespace std;
@@ -7,6 +8,7 @@ using namespace std;
 class Camera;
 class Texture;
 class Level;
+class Text;
 
 struct Circle { int x, y, r; };
 
@@ -22,12 +24,15 @@ class Sprite {
 		int width, height;
 		SDL_Point position;
 		int angle;
-		Texture* texture;
+		//Texture* texture;
+		shared_ptr<Texture> texture;
 		SDL_Rect clipRect;
 		Collider collider;
 	public:
 		Sprite();
 		Sprite(string path);
+		Sprite(Texture texture);
+		Sprite(Text text);
 		void render(Camera* cam = nullptr);
 		void rotate(int x1, int y1);
 		void rotate(int x1, int y1, Level*);

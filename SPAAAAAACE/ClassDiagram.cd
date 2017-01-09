@@ -24,14 +24,14 @@
   <Class Name="Player" Collapsed="true">
     <Position X="5" Y="3.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AIABBAAIAAAAAQCAAIAAQAAAIAgAAACAAAAAAQAEAAA=</HashCode>
+      <HashCode>CIABBAAIAAAAAQCAAIAAQAAAIAgAAACAAAAAAQAEIAA=</HashCode>
       <FileName>sprite.hpp</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Enemy" Collapsed="true">
     <Position X="7.25" Y="3.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>QgAkBgAIACACAACCAAAAAAABIAEgAASEAAIBAgAEAgA=</HashCode>
+      <HashCode>SgAkBgAIACACAACCAAAAAAARIAEgAASEAAIBAgAEIgA=</HashCode>
       <FileName>sprite.hpp</FileName>
     </TypeIdentifier>
   </Class>
@@ -87,15 +87,22 @@
   <Class Name="Text" Collapsed="true">
     <Position X="0.5" Y="4.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAACEAAAAAAAAAAAAAAAKQAAAAAAACAIEAAAiGAYAAA=</HashCode>
+      <HashCode>AAICEAAAAAAAAAAAAAAAKQCCAAAAgAAIEAAgiGAYAAA=</HashCode>
       <FileName>text.hpp</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Menu" Collapsed="true">
     <Position X="0.5" Y="3.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AIAAAEAAAAAAAACAAAgAAAAAgAEIAAAAgEAAAAAAAAA=</HashCode>
+      <HashCode>AIAAAEAAQAAAAFCAAAgAAAAAAAEIAAAAgEAAACAAAAA=</HashCode>
       <FileName>menu.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Button" Collapsed="true">
+    <Position X="2.25" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Button.hpp</FileName>
     </TypeIdentifier>
   </Class>
   <Font Name="Segoe UI" Size="9" />

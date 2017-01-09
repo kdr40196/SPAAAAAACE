@@ -18,6 +18,7 @@
 #include"font.hpp"
 #include"text.hpp"
 #include"menu.hpp"
+#include"button.hpp"
 
 using namespace std;
 

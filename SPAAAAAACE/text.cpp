@@ -98,3 +98,7 @@ int Text::getTextWidth() {
 int Text::getTextHeight() {
 	return textTexture->getHeight();
 }
+
+shared_ptr<Texture> Text::getTextTexture() {
+	return textTexture;
+}

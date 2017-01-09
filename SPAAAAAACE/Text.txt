@@ -1,7 +1,4 @@
 
-UI
-	add mouse buttons in menus
-
 more accurate colliders
 	collider rotation, per pixel collision
 

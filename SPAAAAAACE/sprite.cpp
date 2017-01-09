@@ -2,9 +2,10 @@
 #include"sprite.hpp"
 #include"camera.hpp"
 #include"g.hpp"
+#include"text.hpp"
 #include<cmath>
 
-Texture gSpriteSheet;
+shared_ptr<Texture> gSpriteSheet = make_shared<Texture>();
 Enemy** gEnemies = nullptr;
 vector<Laser> gLasers;
 int gSpawnedEnemies = 0, gScore = 0;
@@ -59,15 +60,29 @@ bool checkCollision(Circle* a, SDL_Rect* b) {
 
 Sprite::Sprite() {
 	angle = 0;
-	texture = new Texture();
+	texture = make_shared<Texture>(Texture());
 	width = 0;
 	height = 0;
 }
 
 Sprite::Sprite(string path) {
 	angle = 0;
-	texture = new Texture();
+	texture = make_shared<Texture>(Texture());
 	if (!texture->loadTextureFromImage(path)) exit(-1);
+	width = texture->getWidth();
+	height = texture->getHeight();
+}
+
+Sprite::Sprite(Texture texture) {
+	angle = 0;
+	this->texture = make_shared<Texture>(texture);
+	width = texture.getWidth();
+	height = texture.getHeight();
+}
+
+Sprite::Sprite(Text text) {
+	angle = 0;
+	texture = text.getTextTexture();
 	width = texture->getWidth();
 	height = texture->getHeight();
 }
@@ -141,7 +156,7 @@ int Sprite::getHeight() {
 Laser::Laser(int start_x, int start_y, int x, int y, Level* l, bool playerStarted) {
 
 	this->playerStarted = playerStarted;
-	texture = &gSpriteSheet;
+	texture = gSpriteSheet;
 	clipRect = { 31, 56, LASER_WIDTH, LASER_HEIGHT };
 
 	start = { start_x, start_y };
@@ -278,7 +293,7 @@ Player::Player() {
 	
 	type = ShipType::SHIP_TYPE_PLAYER;
 
-	texture = &gSpriteSheet;
+	texture = gSpriteSheet;
 	clipRect = { 0, 28, SHIP_WIDTH, SHIP_HEIGHT };
 
 	collider.init(position.x, position.y, SHIP_WIDTH, SHIP_HEIGHT);
@@ -293,7 +308,7 @@ Player::Player(Level* l) {
 	type = ShipType::SHIP_TYPE_PLAYER;
 	health = maxHealth;
 
-	texture = &gSpriteSheet;
+	texture = gSpriteSheet;
 	clipRect = { 0, 28, SHIP_WIDTH, SHIP_HEIGHT };
 
 	collider.init(position.x, position.y, SHIP_WIDTH, SHIP_HEIGHT);
@@ -403,7 +418,7 @@ Enemy::Enemy() {
 	position.x = rand() % (gScreenWidth - SHIP_WIDTH);
 	position.y = rand() % (gScreenHeight - SHIP_HEIGHT);
 
-	texture = &gSpriteSheet;
+	texture = gSpriteSheet;
 	clipRect = { 0, 0, SHIP_WIDTH, SHIP_HEIGHT };
 
 	health = maxHealth;
@@ -418,7 +433,7 @@ Enemy::Enemy() {
 
 Enemy::Enemy(Level* l, Player* p) {
 	id = gSpawnedEnemies;
-	texture = &gSpriteSheet;
+	texture = gSpriteSheet;
 	clipRect = { 0, 0, SHIP_WIDTH, SHIP_HEIGHT };
 
 	health = maxHealth;
