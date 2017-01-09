@@ -5,7 +5,7 @@
 #include<cmath>
 
 Texture gSpriteSheet;
-Enemy* gEnemies[TOTAL_ENEMIES];
+Enemy** gEnemies = nullptr;
 vector<Laser> gLasers;
 int gSpawnedEnemies = 0, gScore = 0;
 
@@ -37,7 +37,6 @@ bool checkCollision(SDL_Rect* a, SDL_Rect* b) {
 
 bool checkCollision(Circle* a, SDL_Rect* b) {
 	int cX, cY;					//closest x, y
-
 	if (a->x < b->x)
 		cX = b->x;
 	else if (a->x > b->x + b->w)
@@ -184,7 +183,6 @@ void Laser::move(float timestep, Level* l, Player* player) {
 		if (checkCollision(collider.getColliderRect(), player->getCollider()->getColliderRect())) {
 			player->takeDamage();
 			position.x = position.y = -999;
-			cout << "Health: " << player->getHealth() << endl;
 		}
 	}
 
@@ -256,7 +254,9 @@ void Ship::attack(int x, int y, Level* l) {
 
 void Ship::takeDamage() {
 	health -= 10;
+	if (health <= 0) health = 0;
 	damaged = true;
+
 }
 
 int Ship::getHealth() {
@@ -346,14 +346,19 @@ void Player::handleInput(SDL_Event& e, Level* l) {
 	}
 }
 
-void Player::update(float timeStep, Level * l) {
+bool Player::update(float timeStep, Level * l) {
 	move(timeStep, l);
-	if (health < maxHealth && hitTimer.getTicks() > REGENERATE_AFTER) {
+
+	if (health == 0) {
+		return false;			//player dead
+	}
+	else if (health < maxHealth && hitTimer.getTicks() > REGENERATE_AFTER) {
 		if (!regenerateTimer.isStarted()) {
 			regenerateTimer.start();
 		}
 		regenerate();
 	}
+	return true;
 }
 
 void Player::move(float timeStep, Level *l) {
@@ -377,7 +382,18 @@ void Player::regenerate() {
 	if (health > maxHealth) {
 		health = maxHealth;
 		regenerateTimer.stop();
+		damaged = false;
 	}
+}
+
+void Player::pause() {
+	hitTimer.pause();
+	regenerateTimer.pause();
+}
+
+void Player::resume() {
+	hitTimer.unpause();
+	regenerateTimer.unpause();
 }
 
 
@@ -501,6 +517,7 @@ void Enemy::update(float timeStep, Level* level, Player* player) {
 			}
 		}
 		else if(state == EnemyState::COOLDOWN){
+			rotate(player->getX() + SHIP_WIDTH / 2, player->getY() + SHIP_HEIGHT / 2);
 			if (cooldownTimer.getTicks() >= COOLDOWN_TIME) {
 				state = EnemyState::RETURNING_TO_IDLE;
 				angle = originalAngle;
@@ -561,7 +578,6 @@ void Enemy::takeDamage() {
 void Enemy::die() {
 	gSpawnedEnemies--;
 	gScore++;
-	cout << gScore << endl;
 	if (maxHealth < 50) {
 		maxHealth++;
 	}
@@ -583,4 +599,14 @@ void Enemy::upgrade() {
 
 EnemyState Enemy::getState() {
 	return state;
+}
+
+void Enemy::pause() {
+	attackTimer.pause();
+	cooldownTimer.pause();
+}
+
+void Enemy::resume() {
+	attackTimer.unpause();
+	cooldownTimer.unpause();
 }

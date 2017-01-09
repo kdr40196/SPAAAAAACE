@@ -3,26 +3,37 @@
 #include<iostream>
 #include<SDL.h>
 #include"texture.hpp"
+#include<memory>
+#include<string>
 using namespace std;
 
+class Font;
+
 class Text {
+	string text;
 	SDL_Point position;
-	Texture textTexture;
+	shared_ptr<Texture> textTexture;
 	SDL_Color textColor;
+	Font* font;
 	public:
 		Text();
-		Text(string text);
-		Text(string text, int x, int y);
-		void updatePosition(int x, int y);
-		void updateText(string text);
-		void render();
-		SDL_Color getColor();
-		void setColor(SDL_Color);
-		int getTextWidth();
-		int getTextHeight();
+		Text(string text, Font* font);
+		Text(string text, Font* font, int x, int y);
+		Text(const Text &obj);
+		~Text() {}
+		Text operator=(const Text& obj);
+		void setPosition(int x, int y);
 		int getX();
 		int getY();
-		//bool loadText(string text, SDL_Color color);
+		bool setText(string text);
+		string getText();
+		void render();
+		void setColor(SDL_Color);
+		SDL_Color getColor();
+		void setFont(Font* font);
+		Font* getFont();
+		int getTextWidth();
+		int getTextHeight();
 };
 
-extern Text scoreText, healthText, scorePrompt, healthPrompt;
+extern Text scoreText, healthText, scorePrompt, healthPrompt, gMenuItemPointer;

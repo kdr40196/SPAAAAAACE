@@ -123,6 +123,7 @@
     <ClCompile Include="collider.cpp" />
     <ClCompile Include="laser.cpp" />
     <ClCompile Include="level.cpp" />
+    <ClCompile Include="menu.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="space.cpp" />
     <ClCompile Include="sprite.cpp" />
@@ -138,6 +139,7 @@
     <ClInclude Include="g.hpp" />
     <ClInclude Include="laser.hpp" />
     <ClInclude Include="level.hpp" />
+    <ClInclude Include="menu.hpp" />
     <ClInclude Include="space.hpp" />
     <ClInclude Include="sprite.hpp" />
     <ClInclude Include="font.hpp" />

@@ -3,55 +3,155 @@
 int main(int argc, char** argv) {
 	if (!init()) return -1;
 
-	if (!loadMedia()) return -1;
-	Level level(3000, 3000);
+	Timer capTimer;
+	Menu mainMenu;
 
-	Player player(&level);
-	Camera cam;
+	if (!loadMainMenu(&mainMenu)) return -1;
 
-	for (int i = 0; i < TOTAL_ENEMIES; i++) {
-		gEnemies[i] = new Enemy(&level, &player);
-		gEnemies[i]->spawn(&level, &cam);
+	bool quit = false;
+	string action;
+	SDL_Event e;
+	
+	while (!quit) {
+		capTimer.start();
+
+		while (SDL_PollEvent(&e)) {
+			if (e.type == SDL_WINDOWEVENT) gWindow.handleEvent(e);
+			else if (e.type == SDL_QUIT) quit = true;
+			else action = mainMenu.handleInput(e);
+		}
+
+		if (action == "EXIT") {
+			quit = true;
+			continue;
+		}
+		else if (action == "PLAY") {
+			mainMenu.exit();
+			break;
+		}
+
+		SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 150);
+		SDL_RenderClear(gRenderer);
+		mainMenu.display();
+		SDL_RenderPresent(gRenderer);
+		
+		float frameTicks = capTimer.getTicks();
+		if (frameTicks < TICKS_PER_FRAME)
+			SDL_Delay(TICKS_PER_FRAME - frameTicks);
 	}
 
-	Timer stepTimer, capTimer;
-	bool quit = false;
-	SDL_Event e;
-	int frame = 0;
+	if (quit) {
+		close();
+		return 0;
+	}
+
+	Menu pauseMenu, gameOverMenu;
+	if (!loadGame() || !loadPauseMenu(&pauseMenu) || !loadGameOverMenu(&gameOverMenu)) {
+		cout << "Unable to load game" << endl;
+		return -1;
+	}
+
+	Level* level = nullptr;
+	Player* player = nullptr;
+	Camera* cam = nullptr;
+	start(&level, &player, &cam);
+	
+	Timer stepTimer;
+	bool paused = false, gameOver = false;
 	while (!quit) {
 		capTimer.start();
 		while (SDL_PollEvent(&e)) {
 			if (e.type == SDL_WINDOWEVENT) gWindow.handleEvent(e);
 			else if (e.type == SDL_QUIT) quit = true;
-			player.handleInput(e, &level);
-		}
-
-		float timeStep = stepTimer.getTicks() / 1000.f;
-
-		player.update(timeStep, &level);
-		cam.move(&player, &level);
-		
-		for (int i = 0; i < gLasers.size(); i++) {
-			gLasers[i].move(timeStep, &level, &player);
-		}
-
-		stepTimer.start();
-		if (!gWindow.isMinimized()) {
-			SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 200);
-			SDL_RenderClear(gRenderer);
-
-			updateLasers();
-
-			for (int i = 0; i < gLasers.size(); i++) {
-				gLasers[i].render(&cam);
+			else if (e.type == SDL_KEYDOWN) {
+				switch (e.key.keysym.sym) {
+				case SDLK_ESCAPE:
+					if (paused) {
+						paused = false;
+						pauseMenu.exit();
+						resume(player);
+					}
+					else {
+						paused = true;
+						pause(player);
+					}
+					break;
+				
+				default:
+					if (paused) {
+						action = pauseMenu.handleInput(e);
+						if (action == "RESUME") {
+							paused = false;
+						}
+						else if (action == "RESTART") {
+							start(&level, &player, &cam);
+							quit = paused = gameOver = false;
+							continue;
+						}
+						else if (action == "EXIT") {
+							quit = true;
+							continue;
+						}
+					}
+					else if (gameOver) {
+						action = gameOverMenu.handleInput(e);
+						if (action == "PLAY AGAIN") {
+							start(&level, &player, &cam);
+							quit = paused = gameOver = false;
+							continue;
+						}
+						else if (action == "EXIT") {
+							quit = true;
+							continue;
+						}
+					}
+				}
 			}
 
-			player.render(&cam);
+			if(!paused && !gameOver)
+				player->handleInput(e, level);
+		}
+		
+		float timeStep = stepTimer.getTicks() / 1000.f;
+		
+		if (!paused && !gameOver) {
+			for (int i = 0; i < gLasers.size(); i++) {
+				gLasers[i].move(timeStep, level, player);
+			}
+			updateLasers();
+			updateEnemies(timeStep, level, player, cam);
 			
-			updateEnemies(timeStep, &level, &player, &cam);
-			
-			updateInfo(&player);
+			gameOver = !player->update(timeStep, level);
+			cam->move(player, level);
+		}
+		
+		stepTimer.start();
+		
+		if (!gWindow.isMinimized()) {
+			SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 255);
+			SDL_RenderClear(gRenderer);
 
+			for (int i = 0; i < gLasers.size(); i++) {
+				gLasers[i].render(cam);
+			}
+
+			for (int i = 0; i < TOTAL_ENEMIES; i++) {
+				gEnemies[i]->render(cam);
+			}
+
+			player->render(cam);
+
+			renderInfo(player);
+
+			if (paused || gameOver) {
+				SDL_SetRenderDrawBlendMode(gRenderer, SDL_BLENDMODE_BLEND);
+				SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 150);
+				SDL_RenderFillRect(gRenderer, nullptr);
+				if (paused)
+					pauseMenu.display();
+				else if (gameOver)
+					gameOverMenu.display();
+			}
 			SDL_RenderPresent(gRenderer);
 		}
 

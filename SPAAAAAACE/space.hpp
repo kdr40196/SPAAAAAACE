@@ -3,6 +3,7 @@
 #include<iostream>
 #include<string>
 #include<algorithm>
+#include<memory>
 #include<SDL.h>
 #include<SDL_image.h>
 #include<SDL_ttf.h>
@@ -16,13 +17,20 @@
 #include"g.hpp"
 #include"font.hpp"
 #include"text.hpp"
+#include"menu.hpp"
 
 using namespace std;
 
 bool init();
 void close();
-bool loadMedia();
+bool loadMainMenu(Menu* mainMenu);
+bool loadPauseMenu(Menu* pauseMenu);
+bool loadGameOverMenu(Menu* gameOverMenu);
+bool loadGame();
+void start(Level** level, Player** player, Camera** cam);
+void pause(Player* player);
+void resume(Player* player);
 
 void updateLasers();
 void updateEnemies(float, Level*, Player*, Camera*);
-void updateInfo(Player* player);
+void renderInfo(Player* player);

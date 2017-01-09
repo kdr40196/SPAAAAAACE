@@ -1,14 +1,9 @@
 
-enemy attack cooldown
-
 UI
-	main menu - PLAY, EXIT
-	GAME OVER - PLAY AGAIN, EXIT
-	pause menu - RESUME, EXIT
-
+	add mouse buttons in menus
 
 more accurate colliders
-	per pixel collision and collider rotation
+	collider rotation, per pixel collision
 
 make infinite
 

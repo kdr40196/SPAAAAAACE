@@ -1,6 +1,8 @@
 #include "font.hpp"
 #include "g.hpp"
 
+Font gSmallFont, gLargeFont;
+
 Font::Font() {
 	font = nullptr;
 	size = 0;
@@ -29,5 +31,3 @@ TTF_Font* Font::getFont() {
 Font::~Font() {
 	free();
 }
-
-Font gFont;

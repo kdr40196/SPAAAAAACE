@@ -70,23 +70,26 @@ class Player : public Ship {
 		Player();
 		Player(Level*);
 		void handleInput(SDL_Event& e, Level* level);
-		void update(float timeStep, Level* level);
+		bool update(float timeStep, Level* level);
 		void move(float timeStep, Level* level);
 		void takeDamage();
 		void regenerate();
+		void pause();
+		void resume();
 };
 
 class Enemy :public Ship {
 	int id, originalAngle;
 	Circle attackRadar;
 	SDL_Point original;
-	static const int MOVEMENT_RANGE = 800, ATTACK_RADAR_RADIUS = 200, ATTACK_TIMEOUT = 1000, COOLDOWN_TIME = 3000;
+	static const int MOVEMENT_RANGE = 800, ATTACK_RADAR_RADIUS = 200, ATTACK_TIMEOUT = 1000, 
+		COOLDOWN_TIME = 3000, DEFAULT_HEALTH = 15;
 	bool playerDetected;
 	Timer attackTimer, cooldownTimer;
 	EnemyState state;
+	static int maxHealth;
 	public:
 		static const SDL_Color color;
-		static int maxHealth;
 		Enemy();
 		Enemy(Level*, Player*);
 		int getId();
@@ -99,6 +102,9 @@ class Enemy :public Ship {
 		void respawn(Level*, Camera*);
 		void upgrade();
 		EnemyState getState();
+		void pause();
+		void resume();
+		static friend void resetEnemy();
 };
 
 class Laser : public Sprite {

@@ -11,8 +11,22 @@ Texture::Texture() {
 	//pixels = nullptr;
 }
 
+Texture::Texture(const Texture & obj) {
+	texture = nullptr;
+	width = obj.width;
+	height = obj.height;
+}
+
 Texture::~Texture() {
 	free();
+}
+
+Texture Texture::operator=(const Texture & obj) {
+	Texture tempTexture;
+	
+	tempTexture.width = obj.width;
+	tempTexture.height = obj.height;
+	return tempTexture;
 }
 
 /*void* Texture::getPixels() {
@@ -113,9 +127,9 @@ bool Texture::loadTexture(string path, Uint32 color) {
 	return true;
 }*/
 
-bool Texture::loadTextureFromText(string text, SDL_Color color) {
+bool Texture::loadTextureFromText(string text, Font* font, SDL_Color color) {
 	free();
-	SDL_Surface* textSurface = TTF_RenderText_Blended_Wrapped(gFont.getFont(), text.c_str(), color, 300);
+	SDL_Surface* textSurface = TTF_RenderText_Blended_Wrapped(font->getFont(), text.c_str(), color, 300);
 	if (textSurface == nullptr) {
 		cout << "Unable to create text surface: " << SDL_GetError() << endl;
 		return false;
@@ -146,13 +160,6 @@ void Texture::render(int x, int y, SDL_Rect* clipRect, double angle,
 	}
 	SDL_RenderCopyEx(gRenderer, texture, clipRect, &renderRect, angle, center, SDL_FLIP_NONE);
 }
-
-/*void Texture::render(int x, int y, Viewport viewport, SDL_Rect * clipRect, double angle, SDL_Point * center) {
-	SDL_Rect viewportRect = viewport.getViewPortRect();
-	int final_x = x + (gScreenWidth - viewportRect.w);
-	int final_y = y + (gScreenHeight - viewportRect.h);
-	render(final_x, final_y, clipRect, angle, center);
-}*/
 
 int Texture::getWidth() { return width; }
 
