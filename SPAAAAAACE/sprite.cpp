@@ -526,10 +526,8 @@ void Enemy::update(float timeStep, Level* level, Player* player) {
 	}
 	else {
 		if (state == EnemyState::ATTACKING) {
-			if (!cooldownTimer.isStarted()) {
-				cooldownTimer.start();
-				state = EnemyState::COOLDOWN;
-			}
+			cooldownTimer.start();
+			state = EnemyState::COOLDOWN;
 		}
 		else if(state == EnemyState::COOLDOWN){
 			rotate(player->getX() + SHIP_WIDTH / 2, player->getY() + SHIP_HEIGHT / 2);
