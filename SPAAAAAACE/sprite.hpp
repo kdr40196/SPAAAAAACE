@@ -13,6 +13,7 @@ class Text;
 struct Circle { int x, y, r; };
 
 bool checkCollision(SDL_Rect* a, SDL_Rect* b);
+bool checkCollision(Circle* a, SDL_Rect* b, int distanceX, int distanceY);		//for infinite-ness
 
 enum class ShipType { SHIP_TYPE_PLAYER, SHIP_TYPE_ENEMY };
 
@@ -24,7 +25,6 @@ class Sprite {
 		int width, height;
 		SDL_Point position;
 		int angle;
-		//Texture* texture;
 		shared_ptr<Texture> texture;
 		SDL_Rect clipRect;
 		Collider collider;
@@ -33,14 +33,14 @@ class Sprite {
 		Sprite(string path);
 		Sprite(Texture texture);
 		Sprite(Text text);
-		void render(Camera* cam = nullptr);
+		void render(Camera* cam = nullptr, Level* l = nullptr);
 		void rotate(int x1, int y1);
-		void rotate(int x1, int y1, Level*);
-		int getX(bool screenPos = false);
-		int getY(bool screePos = false);
+		void rotate(int x1, int y1, int x2, int y2);
+		int getX();
+		int getY();
 		Collider* getCollider();
-		/*int getWidth();
-		int getHeight();*/
+		int getWidth();
+		int getHeight();
 };
 
 class Ship : public Sprite {
@@ -100,6 +100,7 @@ class Enemy :public Ship {
 		int getId();
 		void update(float timeStep, Level* level, Player* player);
 		void move(float timeStep, Level* level, Player* player);
+		void rotate(int x1, int y1, int distanceX, int distanceY);			//for infinite-ness
 		void attack(Player* player, Level* level);
 		void spawn(Level*, Camera*);
 		void takeDamage();

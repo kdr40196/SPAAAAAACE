@@ -2,7 +2,7 @@
 more accurate colliders
 	collider rotation, per pixel collision
 
-make infinite
+make infinite - improve rotate functions, fix shooting problem
 
 scaling
 
