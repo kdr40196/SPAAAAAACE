@@ -27,7 +27,7 @@ class Sprite {
 		//Texture* texture;
 		shared_ptr<Texture> texture;
 		SDL_Rect clipRect;
-		Collider collider;
+		Collider* collider;
 	public:
 		Sprite();
 		Sprite(string path);

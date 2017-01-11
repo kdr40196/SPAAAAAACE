@@ -6,17 +6,19 @@ Collider::Collider() {
 	colliderRect = { 0, 0, 0, 0 };
 }
 
-void Collider::init(int x, int y, int w, int h) {
+Collider::Collider(int x, int y, int w, int h, int angle) {
 	colliderRect = { x, y, w, h };
+	this->angle = angle;
 }
 
 SDL_Rect * Collider::getColliderRect() {
 	return &colliderRect;
 }
 
-void Collider::move(SDL_Point position) {
+void Collider::move(SDL_Point position, int angle) {
 	colliderRect.x = position.x;
 	colliderRect.y = position.y;
+	this->angle = angle;
 }
 
 
