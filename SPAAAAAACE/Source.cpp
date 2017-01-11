@@ -45,8 +45,8 @@ int main(int argc, char** argv) {
 		return 0;
 	}
 
-	Menu pauseMenu, gameOverMenu;
-	if (!loadGame() || !loadPauseMenu(&pauseMenu) || !loadGameOverMenu(&gameOverMenu)) {
+	Menu *pauseMenu = new Menu(), *gameOverMenu = nullptr;
+	if (!loadGame() || !loadPauseMenu(pauseMenu)) {
 		cout << "Unable to load game" << endl;
 		return -1;
 	}
@@ -68,7 +68,7 @@ int main(int argc, char** argv) {
 				case SDLK_ESCAPE:
 					if (paused) {
 						paused = false;
-						pauseMenu.exit();
+						pauseMenu->exit();
 						resume(player);
 					}
 					else {
@@ -78,9 +78,8 @@ int main(int argc, char** argv) {
 					break;
 				}
 			}
-			//default:
 			if (paused) {
-				action = pauseMenu.handleInput(e);
+				action = pauseMenu->handleInput(e);
 				if (action == "RESUME") {
 					paused = false;
 				}
@@ -95,7 +94,7 @@ int main(int argc, char** argv) {
 				}
 			}
 			else if (gameOver) {
-				action = gameOverMenu.handleInput(e);
+				action = gameOverMenu->handleInput(e);
 				if (action == "PLAY AGAIN") {
 					start(&level, &player, &cam);
 					quit = paused = gameOver = false;
@@ -147,9 +146,14 @@ int main(int argc, char** argv) {
 				SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 150);
 				SDL_RenderFillRect(gRenderer, nullptr);
 				if (paused)
-					pauseMenu.display();
-				else if (gameOver)
-					gameOverMenu.display();
+					pauseMenu->display();
+				else if (gameOver) {
+					if (gameOverMenu == nullptr) {
+						gameOverMenu = new Menu();
+						loadGameOverMenu(gameOverMenu);
+					}
+					gameOverMenu->display();
+				}
 			}
 			SDL_RenderPresent(gRenderer);
 		}
