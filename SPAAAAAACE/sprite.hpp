@@ -36,6 +36,7 @@ class Sprite {
 		void render(Camera* cam = nullptr, Level* l = nullptr);
 		void rotate(int x1, int y1);
 		void rotate(int x1, int y1, int x2, int y2);
+		void rotate(int x1, int y1, Level* l);
 		int getX();
 		int getY();
 		Collider* getCollider();
@@ -100,7 +101,6 @@ class Enemy :public Ship {
 		int getId();
 		void update(float timeStep, Level* level, Player* player);
 		void move(float timeStep, Level* level, Player* player);
-		void rotate(int x1, int y1, int distanceX, int distanceY);			//for infinite-ness
 		void attack(Player* player, Level* level);
 		void spawn(Level*, Camera*);
 		void takeDamage();
