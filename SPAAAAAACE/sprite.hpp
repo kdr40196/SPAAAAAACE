@@ -10,10 +10,6 @@ class Texture;
 class Level;
 class Text;
 
-struct Circle { int x, y, r; };
-
-bool checkCollision(SDL_Rect* a, SDL_Rect* b);
-
 enum class ShipType { SHIP_TYPE_PLAYER, SHIP_TYPE_ENEMY };
 
 enum class EnemyState { IDLE, ATTACKING, COOLDOWN, RETURNING_TO_IDLE };

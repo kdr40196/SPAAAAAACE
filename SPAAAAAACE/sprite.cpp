@@ -15,48 +15,6 @@ const SDL_Color Enemy::color = { 255, 0, 0, 255 };
 int Player::maxHealth = 100;
 int Enemy::maxHealth = 15;
 
-int distance(SDL_Point a, SDL_Point b) {
-	return sqrt((a.x - b.x)*(a.x - b.x) + (a.y - b.y)*(a.y - b.y));
-}
-
-bool checkCollision(SDL_Rect* a, SDL_Rect* b) {
-	int leftA, leftB, rightA, rightB, topA, topB, bottomA, bottomB;
-	leftA = a->x;
-	rightA = a->x + a->w;
-	topA = a->y;
-	bottomA = a->y + a->h;
-
-	leftB = b->x;
-	rightB = b->x + b->w;
-	topB = b->y;
-	bottomB = b->y + b->h;
-
-	if (topA >= bottomB || bottomA <= topB || rightA <= leftB || leftA >= rightB) return false;
-	
-	return true;
-}
-
-bool checkCollision(Circle* a, SDL_Rect* b) {
-	int cX, cY;					//closest x, y
-	if (a->x < b->x)
-		cX = b->x;
-	else if (a->x > b->x + b->w)
-		cX = b->x + b->w;
-	else cX = a->x;
-
-	if (a->y < b->y)
-		cY = b->y;
-	else if (a->y > b->y + b->h)
-		cY = b->y + b->h;
-	else cY = a->y;
-
-	if (distance({ cX, cY }, { a->x, a->y }) < a->r)
-		return true;
-
-	return false;
-}
-
-
 
 Sprite::Sprite() {
 	angle = 0;
@@ -187,7 +145,7 @@ void Laser::move(float timestep, Level* l, Player* player) {
 
 	if (playerStarted) {
 		for (int i = 0; i < TOTAL_ENEMIES; i++) {
-			if (checkCollision(collider->getColliderRect(), gEnemies[i]->getCollider()->getColliderRect())) {
+			if (collider->collides(gEnemies[i]->getCollider())) {
 				gEnemies[i]->takeDamage();
 				position.x = position.y = -999;
 				break;
@@ -195,7 +153,7 @@ void Laser::move(float timestep, Level* l, Player* player) {
 		}
 	}
 	else {
-		if (checkCollision(collider->getColliderRect(), player->getCollider()->getColliderRect())) {
+		if (collider->collides(player->getCollider())) {
 			player->takeDamage();
 			position.x = position.y = -999;
 		}
@@ -231,7 +189,7 @@ void Ship::move(float timeStep, Level* l) {
 
 	//check if colliding with enemy
 	for (int i = 0; i < TOTAL_ENEMIES; i++) {
-		if (checkCollision(collider->getColliderRect(), gEnemies[i]->getCollider()->getColliderRect())) {
+		if (collider->collides(gEnemies[i]->getCollider())) {
 			position.x -= displacement;
 			collider->move(position, angle);
 			break;
@@ -247,7 +205,7 @@ void Ship::move(float timeStep, Level* l) {
 	
 	//check if colliding with enemy
 	for (int i = 0; i < TOTAL_ENEMIES; i++) {
-		if (checkCollision(collider->getColliderRect(), gEnemies[i]->getCollider()->getColliderRect())) {
+		if (collider->collides(gEnemies[i]->getCollider())) {
 			position.y -= displacement;
 			collider->move(position, angle);
 			break;
@@ -478,7 +436,7 @@ void Enemy::move(float timeStep, Level* l, Player* player) {
 
 	//check if colliding with other enemies
 	for (int i = 0; i < TOTAL_ENEMIES; i++) {
-		if (this->id != gEnemies[i]->getId() && checkCollision(collider->getColliderRect(), gEnemies[i]->getCollider()->getColliderRect())) {
+		if (this->id != gEnemies[i]->getId() && collider->collides(gEnemies[i]->getCollider())) {
 			
 			position.x -= xDisplacement, position.y -= yDisplacement;
 
@@ -491,7 +449,7 @@ void Enemy::move(float timeStep, Level* l, Player* player) {
 	}
 
 	//check if colliding with player
-	if (checkCollision(collider->getColliderRect(), player->getCollider()->getColliderRect())) {
+	if (collider->collides(player->getCollider())) {
 		position.x -= xDisplacement, position.y -= yDisplacement;
 
 		angle = (angle + 180) % 360;
