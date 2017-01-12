@@ -313,7 +313,19 @@ void Player::handleInput(SDL_Event& e, Level* l) {
 	if (e.type == SDL_MOUSEMOTION) {
 		int x, y;
 		SDL_GetMouseState(&x, &y);
+		int resetAngle = angle;
+		bool collision = false;
 		rotate(x, y, l);
+		for (int iEnemies = 0; iEnemies < TOTAL_ENEMIES; iEnemies++) {
+			if (collider->collides(gEnemies[iEnemies]->getCollider())) {
+				collision = true;
+				break;
+			}
+		}
+		if (collision) {
+			angle = resetAngle;
+			collider->rotate(angle);
+		}
 	}
 
 	if (e.type == SDL_MOUSEBUTTONDOWN) {
@@ -341,7 +353,19 @@ bool Player::update(float timeStep, Level * l) {
 void Player::move(float timeStep, Level *l) {
 	int x, y;
 	SDL_GetMouseState(&x, &y);
+	bool collision = false;
+	int resetAngle = angle;
 	rotate(x, y, l);
+	for (int iEnemies = 0; iEnemies < TOTAL_ENEMIES; iEnemies++) {
+		if (collider->collides(gEnemies[iEnemies]->getCollider())) {
+			collision = true;
+			break;
+		}
+	}
+	if (collision) {
+		angle = resetAngle;
+		collider->rotate(angle);
+	}
 	Ship::move(timeStep, l);
 }
 
@@ -471,6 +495,24 @@ void Enemy::attack(Player* player, Level* l) {
 		int y = player->getY() + SHIP_HEIGHT / 2;
 		Ship::attack(x, y, l);
 		attackTimer.start();
+	}
+}
+
+void Enemy::rotate(int x, int y) {
+	int resetAngle = angle;
+	bool collision = false;
+	Sprite::rotate(x, y);
+	for (int iEnemies = 0; iEnemies < TOTAL_ENEMIES; iEnemies++) {
+		if (gEnemies[iEnemies]->getId() != id) {
+			if (collider->collides(gEnemies[iEnemies]->getCollider())) {
+				collision = true;
+				break;
+			}
+		}
+	}
+	if (collision) {
+		angle = resetAngle;
+		collider->rotate(angle);
 	}
 }
 

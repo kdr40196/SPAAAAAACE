@@ -1,6 +1,6 @@
 
 more accurate colliders
-	stop rotation on collision
+	improve rotation on collision
 	make colliders as vectors
 
 make infinite

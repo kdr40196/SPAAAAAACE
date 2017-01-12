@@ -97,6 +97,7 @@ class Enemy :public Ship {
 		void update(float timeStep, Level* level, Player* player);
 		void move(float timeStep, Level* level, Player* player);
 		void attack(Player* player, Level* level);
+		void rotate(int x, int y);
 		void spawn(Level*, Camera*);
 		void takeDamage();
 		void die();
