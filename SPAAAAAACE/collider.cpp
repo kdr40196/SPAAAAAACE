@@ -7,6 +7,7 @@ int distance(SDL_Point a, SDL_Point b) {
 	return sqrt((a.x - b.x)*(a.x - b.x) + (a.y - b.y)*(a.y - b.y));
 }
 
+//check collision between normal rectangles
 bool checkCollision(SDL_Rect* a, SDL_Rect* b) {
 	int leftA, leftB, rightA, rightB, topA, topB, bottomA, bottomB;
 	leftA = a->x;
@@ -24,6 +25,40 @@ bool checkCollision(SDL_Rect* a, SDL_Rect* b) {
 	return true;
 }
 
+//check collision between rotated rectangles
+bool checkCollisionSAT(SDL_Point* a, SDL_Point* b) {
+
+	//Separating Axis Theorem
+	for (int iShape = 0; iShape < 2; iShape++) {
+		SDL_Point* currentShape = nullptr;
+		(iShape == 0) ? currentShape = a : currentShape = b;
+		for (int iPoints = 0; iPoints < 4; iPoints++) {
+			int iPoints2 = (iPoints + 1) % 4;
+			SDL_Point p1 = currentShape[iPoints], p2 = currentShape[iPoints2];
+			SDL_Point normal = { p2.y - p1.y, p1.x - p2.x };
+			int minA = -9999, maxA = -9999;
+			for (int jPoints = 0; jPoints < 4; jPoints++) {
+				int projected = normal.x * a[jPoints].x + normal.y * a[jPoints].y;
+				if (minA == -9999 || projected < minA)
+					minA = projected;
+				if (maxA == -9999 || projected > maxA)
+					maxA = projected;
+			}
+			int minB = -9999, maxB = -9999;
+			for (int jPoints = 0; jPoints < 4; jPoints++) {
+				int projected = normal.x * b[jPoints].x + normal.y * b[jPoints].y;
+				if (minB == -9999 || projected < minB)
+					minB = projected;
+				if (maxB == -9999 || projected > maxB)
+					maxB = projected;
+			}
+			if (maxA < minB || minA > maxB)
+				return false;
+		}
+	}
+}
+
+//check collision between a circle and a normal rectangle
 bool checkCollision(Circle* a, SDL_Rect* b) {
 	int cX, cY;					//closest x, y
 	if (a->x < b->x)
@@ -110,54 +145,8 @@ bool Collider::collides(Collider* collider) {
 	//SAT
 	SDL_Point* collidingPoints = new SDL_Point[4];
 	collidingPoints = collider->getRotatedPoints();
-	SDL_Point axes1[4], axes2[4];
-
-	for (int iPoints = 0; iPoints < 4; iPoints++) {
-		int iPoints2 = (iPoints + 1) % 4;
-		SDL_Point p1 = rotatedPoints[iPoints], p2 = rotatedPoints[iPoints2];
-		SDL_Point normal = { p2.y - p1.y, p1.x - p2.x };
-		int minA = -9999, maxA = -9999;
-		for (int jPoints = 0; jPoints < 4; jPoints++) {
-			int projected = normal.x * rotatedPoints[jPoints].x + normal.y * rotatedPoints[jPoints].y;
-			if (minA == -9999 || projected < minA)
-				minA = projected;
-			if (maxA == -9999 || projected > maxA)
-				maxA = projected;
-		}
-		int minB = -9999, maxB = -9999;
-		for (int jPoints = 0; jPoints < 4; jPoints++) {
-			int projected = normal.x * collidingPoints[jPoints].x + normal.y * collidingPoints[jPoints].y;
-			if (minB == -9999 || projected < minB)
-				minB = projected;
-			if (maxB == -9999 || projected > maxB)
-				maxB = projected;
-		}
-		if (maxA < minB || minA > maxB)
-			return false;
+	if (checkCollisionSAT(rotatedPoints, collidingPoints)) {
+		return true;
 	}
-
-	for (int iPoints = 0; iPoints < 4; iPoints++) {
-		int iPoints2 = (iPoints + 1) % 4;
-		SDL_Point p1 = collidingPoints[iPoints], p2 = collidingPoints[iPoints2];
-		SDL_Point normal = { p2.y - p1.y, p1.x - p2.x };
-		int minA = -9999, maxA = -9999;
-		for (int jPoints = 0; jPoints < 4; jPoints++) {
-			int projected = normal.x * rotatedPoints[jPoints].x + normal.y * rotatedPoints[jPoints].y;
-			if (minA == -9999 || projected < minA)
-				minA = projected;
-			if (maxA == -9999 || projected > maxA)
-				maxA = projected;
-		}
-		int minB = -9999, maxB = -9999;
-		for (int jPoints = 0; jPoints < 4; jPoints++) {
-			int projected = normal.x * collidingPoints[jPoints].x + normal.y * collidingPoints[jPoints].y;
-			if (minB == -9999 || projected < minB)
-				minB = projected;
-			if (maxB == -9999 || projected > maxB)
-				maxB = projected;
-		}
-		if (maxA < minB || minA > maxB)
-			return false;
-	}
-	return true;
+	return false;
 }
