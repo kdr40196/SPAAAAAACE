@@ -132,7 +132,6 @@ Laser::Laser(int start_x, int start_y, int x, int y, int angle, Level* l, bool p
 	xVel = sin(angle*M_PI/180) * LASER_VEL;
 	yVel = -cos(angle*M_PI/180) * LASER_VEL;
 	//collider->rotate(angle);
-	cout << collider->getAngle() << endl;
 }
 
 Laser::~Laser() { }
