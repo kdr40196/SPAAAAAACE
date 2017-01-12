@@ -1,6 +1,7 @@
 
 more accurate colliders
-	per pixel collision
+	stop rotation on collision
+	make colliders as vectors
 
 make infinite
 

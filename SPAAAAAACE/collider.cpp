@@ -1,6 +1,5 @@
 #pragma once
 #include"collider.hpp"
-#include<iostream>
 #include<cmath>
 
 int distance(SDL_Point a, SDL_Point b) {
@@ -56,6 +55,7 @@ bool checkCollisionSAT(SDL_Point* a, SDL_Point* b) {
 				return false;
 		}
 	}
+	return true;
 }
 
 //check collision between a circle and a normal rectangle
@@ -82,17 +82,22 @@ bool checkCollision(Circle* a, SDL_Rect* b) {
 
 Collider::Collider() {
 	colliderRect = { 0, 0, 0, 0 };
-	rotatedPoints[0] = { colliderRect.x, colliderRect.y };
-	rotatedPoints[1] = { colliderRect.x + colliderRect.w, colliderRect.y };
-	rotatedPoints[2] = { colliderRect.x + colliderRect.w, colliderRect.y  + colliderRect.h};
-	rotatedPoints[3] = { colliderRect.x, colliderRect.y + colliderRect.h };
+	rotatedColliderRect[0] = { colliderRect.x, colliderRect.y };
+	rotatedColliderRect[1] = { colliderRect.x + colliderRect.w, colliderRect.y };
+	rotatedColliderRect[2] = { colliderRect.x + colliderRect.w, colliderRect.y  + colliderRect.h};
+	rotatedColliderRect[3] = { colliderRect.x, colliderRect.y + colliderRect.h };
 	angle = 0;
+	noOfColliders = 0;
+	colliders = nullptr;
+	rotatedColliders = nullptr;
 }
 
 Collider::Collider(int x, int y, int w, int h, float angle) {
 	colliderRect = { x, y, w, h };
 	this->angle = angle;
-	rotate(angle);
+	noOfColliders = 1;
+	colliders = nullptr;
+	rotatedColliders = nullptr;
 }
 
 SDL_Rect* Collider::getColliderRect() {
@@ -102,20 +107,32 @@ SDL_Rect* Collider::getColliderRect() {
 void Collider::move(SDL_Point position) {
 	colliderRect.x = position.x;
 	colliderRect.y = position.y;
+	
+	//move colliders
+	int r = 0;
+	for (int iColliders = 0; iColliders < noOfColliders; iColliders++) {
+		colliders[iColliders].x = position.x + (colliderRect.w - colliders[iColliders].w) / 2;
+		colliders[iColliders].y = position.y + r;
+		r += colliders[iColliders].h;
+	}
 	rotate(angle);
 }
 
 void Collider::move(SDL_Point position, float angle) {
-	move(position);
 	this->angle = angle;
+	move(position);
 }
 
 float Collider::getAngle() {
 	return angle;
 }
 
-SDL_Point* Collider::getRotatedPoints() {
-	return rotatedPoints;
+SDL_Point* Collider::getRotatedColliderRect() {
+	return rotatedColliderRect;
+}
+
+SDL_Point ** Collider::getColliders() {
+	return rotatedColliders;
 }
 
 void Collider::rotate(float angle) {
@@ -125,28 +142,103 @@ void Collider::rotate(float angle) {
 	int cX = colliderRect.x + colliderRect.w / 2, cY = colliderRect.y + colliderRect.h / 2;
 
 	int tempX = colliderRect.x - cX, tempY = colliderRect.y - cY;
-	rotatedPoints[0].x = (tempX * cos(angle) - tempY * sin(angle)) + cX;
-	rotatedPoints[0].y = (tempX * sin(angle) + tempY * cos(angle)) + cY;
+	rotatedColliderRect[0].x = (tempX * cos(angle) - tempY * sin(angle)) + cX;
+	rotatedColliderRect[0].y = (tempX * sin(angle) + tempY * cos(angle)) + cY;
 
 	tempX = (colliderRect.x + colliderRect.w) - cX, tempY = colliderRect.y - cY;
-	rotatedPoints[1].x = (tempX * cos(angle) - tempY * sin(angle)) + cX;
-	rotatedPoints[1].y = (tempX * sin(angle) + tempY * cos(angle)) + cY;
+	rotatedColliderRect[1].x = (tempX * cos(angle) - tempY * sin(angle)) + cX;
+	rotatedColliderRect[1].y = (tempX * sin(angle) + tempY * cos(angle)) + cY;
 
 	tempX = colliderRect.x - cX, tempY = (colliderRect.y + colliderRect.h) - cY;
-	rotatedPoints[2].x = (tempX * cos(angle) - tempY * sin(angle)) + cX;
-	rotatedPoints[2].y = (tempX * sin(angle) + tempY * cos(angle)) + cY;
+	rotatedColliderRect[2].x = (tempX * cos(angle) - tempY * sin(angle)) + cX;
+	rotatedColliderRect[2].y = (tempX * sin(angle) + tempY * cos(angle)) + cY;
 
 	tempX = (colliderRect.x + colliderRect.w) - cX, tempY = (colliderRect.y + colliderRect.h) - cY;
-	rotatedPoints[3].x = (tempX * cos(angle) - tempY * sin(angle)) + cX;
-	rotatedPoints[3].y = (tempX * sin(angle) + tempY * cos(angle)) + cY;
+	rotatedColliderRect[3].x = (tempX * cos(angle) - tempY * sin(angle)) + cX;
+	rotatedColliderRect[3].y = (tempX * sin(angle) + tempY * cos(angle)) + cY;
+
+	//update rotatedColliders
+	for (int iColliders = 0; iColliders < noOfColliders; iColliders++) {
+		cX = colliders[iColliders].x + colliders[iColliders].w / 2, cY = colliders[iColliders].y + colliders[iColliders].h / 2;
+
+		tempX = colliders[iColliders].x - cX, tempY = colliders[iColliders].y - cY;
+		rotatedColliders[iColliders][0].x = (tempX * cos(angle) - tempY * sin(angle)) + cX;
+		rotatedColliders[iColliders][0].y = (tempX * sin(angle) + tempY * cos(angle)) + cY;
+
+		tempX = (colliders[iColliders].x + colliders[iColliders].w) - cX, tempY = colliders[iColliders].y - cY;
+		rotatedColliders[iColliders][1].x = (tempX * cos(angle) - tempY * sin(angle)) + cX;
+		rotatedColliders[iColliders][1].y = (tempX * sin(angle) + tempY * cos(angle)) + cY;
+
+		tempX = colliders[iColliders].x - cX, tempY = (colliders[iColliders].y + colliders[iColliders].h) - cY;
+		rotatedColliders[iColliders][2].x = (tempX * cos(angle) - tempY * sin(angle)) + cX;
+		rotatedColliders[iColliders][2].y = (tempX * sin(angle) + tempY * cos(angle)) + cY;
+
+		tempX = (colliders[iColliders].x + colliders[iColliders].w) - cX, tempY = (colliders[iColliders].y + colliders[iColliders].h) - cY;
+		rotatedColliders[iColliders][3].x = (tempX * cos(angle) - tempY * sin(angle)) + cX;
+		rotatedColliders[iColliders][3].y = (tempX * sin(angle) + tempY * cos(angle)) + cY;
+	}
 }
 
-bool Collider::collides(Collider* collider) {
-	//SAT
+int Collider::getNoOfColliders() {
+	return noOfColliders;
+}
+
+bool Collider::collides(Collider* anotherCollider) {
 	SDL_Point* collidingPoints = new SDL_Point[4];
-	collidingPoints = collider->getRotatedPoints();
-	if (checkCollisionSAT(rotatedPoints, collidingPoints)) {
-		return true;
+
+	collidingPoints = anotherCollider->getRotatedColliderRect();
+
+	if (checkCollisionSAT(rotatedColliderRect, collidingPoints)) {
+		//check per pixel collision
+		SDL_Point** collidingColliders = anotherCollider->getColliders();
+		for (int iColliders = 0; iColliders < noOfColliders; iColliders++) {
+			for (int jColliders = 0; jColliders < anotherCollider->getNoOfColliders(); jColliders++) {
+				if (checkCollisionSAT(rotatedColliders[iColliders], collidingColliders[jColliders]))
+					return true;
+			}
+		}
 	}
 	return false;
+}
+
+ShipCollider::ShipCollider(int x, int y, int w, int h, float angle)
+	: Collider(x, y, w, h, angle) {
+
+	noOfColliders = 13;
+	colliders = new SDL_Rect[noOfColliders];
+	
+	//initialize colliders - with screen position
+	colliders[0] = { x + 31, y + 0, 2, 2 };
+	colliders[1] = { x + 30, y + 2, 4, 2 };
+	colliders[2] = { x + 28, y + 4, 8, 2 };
+	colliders[3] = { x + 26, y + 6, 12, 2 };
+	colliders[4] = { x + 20, y + 8, 24, 2 };
+	colliders[5] = { x + 18, y + 10, 28, 2 };
+	colliders[6] = { x + 16, y + 12, 32, 2 };
+	colliders[7] = { x + 14, y + 14, 36, 2 };
+	colliders[8] = { x + 10, y + 16, 44, 4 };
+	colliders[9] = { x + 8, y + 18, 48, 2 };
+	colliders[10] = { x + 4, y + 20, 56, 2 };
+	colliders[11] = { x + 2, y + 24, 60, 2 };
+	colliders[12] = { x + 0, y + 26, 64, 2 };
+
+	rotatedColliders = new SDL_Point*[noOfColliders];
+	for (int iColliders = 0; iColliders < noOfColliders; iColliders++) {
+		rotatedColliders[iColliders] = new SDL_Point[4];
+	}
+	rotate(angle);
+}
+
+LaserCollider::LaserCollider(int x, int y, int w, int h, float angle)
+	: Collider(x, y, w, h, angle) {
+
+	noOfColliders = 1;
+	colliders = new SDL_Rect[noOfColliders];
+	colliders[0] = colliderRect;
+
+	rotatedColliders = new SDL_Point*[noOfColliders];
+	for (int iColliders = 0; iColliders < noOfColliders; iColliders++) {
+		rotatedColliders[iColliders] = new SDL_Point[4];
+	}
+	rotate(angle);
 }

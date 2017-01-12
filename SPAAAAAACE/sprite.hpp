@@ -19,7 +19,7 @@ class Sprite {
 	protected:
 		int width, height;
 		SDL_Point position;
-		int angle;
+		float angle;
 		//Texture* texture;
 		shared_ptr<Texture> texture;
 		SDL_Rect clipRect;

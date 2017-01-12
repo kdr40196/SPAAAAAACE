@@ -3,9 +3,13 @@
 #include<SDL.h>
 
 class Collider {
-	SDL_Rect colliderRect;
-	SDL_Point rotatedPoints[4];
 	float angle;
+	protected:
+		SDL_Rect colliderRect;
+		SDL_Point rotatedColliderRect[4];
+		SDL_Rect* colliders;
+		SDL_Point** rotatedColliders;
+		int noOfColliders;
 	public:
 		Collider();
 		Collider(int x, int y, int w, int h, float angle = 0);
@@ -14,8 +18,20 @@ class Collider {
 		void move(SDL_Point position);
 		void move(SDL_Point position, float angle);
 		float getAngle();
-		SDL_Point* getRotatedPoints();
+		SDL_Point* getRotatedColliderRect();
+		SDL_Point** getColliders();
 		void rotate(float angle);
+		int getNoOfColliders();
+};
+
+class ShipCollider : public Collider {
+	public:
+		ShipCollider(int x, int y, int w, int h, float angle = 0);
+};
+
+class LaserCollider : public Collider {
+	public:
+		LaserCollider(int x, int y, int w, int h, float angle = 0);
 };
 
 struct Circle { int x, y, r; };

@@ -21,6 +21,7 @@ Sprite::Sprite() {
 	texture = make_shared<Texture>(Texture());
 	width = 0;
 	height = 0;
+	collider = nullptr;
 }
 
 Sprite::Sprite(string path) {
@@ -29,6 +30,7 @@ Sprite::Sprite(string path) {
 	if (!texture->loadTextureFromImage(path)) exit(-1);
 	width = texture->getWidth();
 	height = texture->getHeight();
+	collider = nullptr;
 }
 
 Sprite::Sprite(Texture texture) {
@@ -36,6 +38,7 @@ Sprite::Sprite(Texture texture) {
 	this->texture = make_shared<Texture>(texture);
 	width = texture.getWidth();
 	height = texture.getHeight();
+	collider = nullptr;
 }
 
 Sprite::Sprite(Text text) {
@@ -43,6 +46,7 @@ Sprite::Sprite(Text text) {
 	texture = text.getTextTexture();
 	width = texture->getWidth();
 	height = texture->getHeight();
+	collider = nullptr;
 }
 
 void Sprite::render(Camera* cam) {
@@ -126,7 +130,7 @@ Laser::Laser(int start_x, int start_y, int x, int y, int angle, Level* l, bool p
 	width = LASER_WIDTH, height = LASER_HEIGHT;
 
 
-	collider = new Collider(start_x, start_y, LASER_WIDTH, LASER_HEIGHT, angle);
+	collider = new LaserCollider(start_x, start_y, LASER_WIDTH, LASER_HEIGHT, angle);
 	this->angle = angle;
 
 	xVel = sin(angle*M_PI/180) * LASER_VEL;
@@ -254,7 +258,7 @@ Player::Player() {
 	texture = gSpriteSheet;
 	clipRect = { 0, 28, SHIP_WIDTH, SHIP_HEIGHT };
 
-	collider = new Collider(position.x, position.y, SHIP_WIDTH, SHIP_HEIGHT, angle);
+	collider = new ShipCollider(position.x, position.y, SHIP_WIDTH, SHIP_HEIGHT, angle);
 
 	health = maxHealth;
 }
@@ -269,7 +273,7 @@ Player::Player(Level* l) {
 	texture = gSpriteSheet;
 	clipRect = { 0, 28, SHIP_WIDTH, SHIP_HEIGHT };
 
-	collider = new Collider(position.x, position.y, SHIP_WIDTH, SHIP_HEIGHT, angle);
+	collider = new ShipCollider(position.x, position.y, SHIP_WIDTH, SHIP_HEIGHT, angle);
 }
 
 void Player::handleInput(SDL_Event& e, Level* l) {
@@ -335,11 +339,10 @@ bool Player::update(float timeStep, Level * l) {
 }
 
 void Player::move(float timeStep, Level *l) {
-	Ship::move(timeStep, l);
-
 	int x, y;
 	SDL_GetMouseState(&x, &y);
 	rotate(x, y, l);
+	Ship::move(timeStep, l);
 }
 
 void Player::takeDamage() {
@@ -386,7 +389,7 @@ Enemy::Enemy() {
 
 	attackTimer.start();
 
-	collider = new Collider(position.x, position.y, SHIP_WIDTH, SHIP_HEIGHT, angle);
+	collider = new ShipCollider(position.x, position.y, SHIP_WIDTH, SHIP_HEIGHT, angle);
 }
 
 Enemy::Enemy(Level* l, Player* p) {
@@ -398,7 +401,7 @@ Enemy::Enemy(Level* l, Player* p) {
 	playerDetected = false;
 	type = ShipType::SHIP_TYPE_ENEMY;
 	state = EnemyState::IDLE;
-	collider = new Collider(position.x, position.y, SHIP_WIDTH, SHIP_HEIGHT, angle);
+	collider = new ShipCollider(position.x, position.y, SHIP_WIDTH, SHIP_HEIGHT, angle);
 	attackTimer.start();
 }
 
@@ -409,7 +412,7 @@ int Enemy::getId() {
 void Enemy::move(float timeStep, Level* l, Player* player) {
 
 	if (distance(original, position) > MOVEMENT_RANGE / 2) {
-		angle = (angle + 180) % 360;
+		angle = (int(angle) + 180) % 360;
 		xVel = -xVel, yVel = -yVel;
 		//move(timeStep, l, player);
 	}
@@ -428,7 +431,7 @@ void Enemy::move(float timeStep, Level* l, Player* player) {
 		
 		position.x -= xDisplacement, position.y -= yDisplacement;
 
-		angle = (angle + 180) % 360;
+		angle = (int(angle) + 180) % 360;
 		xVel = -xVel;
 		yVel = -yVel;
 		collider->move(position, angle);
@@ -440,7 +443,7 @@ void Enemy::move(float timeStep, Level* l, Player* player) {
 			
 			position.x -= xDisplacement, position.y -= yDisplacement;
 
-			angle = (angle + 180) % 360;
+			angle = (int(angle) + 180) % 360;
 			xVel = -xVel;
 			yVel = -yVel;
 
@@ -452,7 +455,7 @@ void Enemy::move(float timeStep, Level* l, Player* player) {
 	if (collider->collides(player->getCollider())) {
 		position.x -= xDisplacement, position.y -= yDisplacement;
 
-		angle = (angle + 180) % 360;
+		angle = (int(angle) + 180) % 360;
 		xVel = -xVel;
 		yVel = -yVel;
 		collider->move(position, angle);
@@ -535,7 +538,7 @@ void Enemy::spawn(Level* level, Camera* cam) {
 	xVel = sin(angle*M_PI / 180) * VEL;
 	yVel = -cos(angle*M_PI / 180) * VEL;
 
-	collider = new Collider(position.x, position.y, SHIP_WIDTH, SHIP_HEIGHT, angle);				//collider for new ship
+	collider = new ShipCollider(position.x, position.y, SHIP_WIDTH, SHIP_HEIGHT, angle);				//collider for new ship
 
 	attackRadar = { position.x, position.y, ATTACK_RADAR_RADIUS };
 
