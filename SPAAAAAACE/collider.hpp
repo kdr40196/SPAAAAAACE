@@ -4,13 +4,18 @@
 
 class Collider {
 	SDL_Rect colliderRect;
-	int angle;
+	SDL_Point rotatedPoints[4];
+	float angle;
 	public:
 		Collider();
-		Collider(int x, int y, int w, int h, int angle = 0);
+		Collider(int x, int y, int w, int h, float angle = 0);
 		SDL_Rect* getColliderRect();
 		bool collides(Collider*);
-		void move(SDL_Point position, int angle = 0);
+		void move(SDL_Point position);
+		void move(SDL_Point position, float angle);
+		float getAngle();
+		SDL_Point* getRotatedPoints();
+		void rotate(float angle);
 };
 
 struct Circle { int x, y, r; };

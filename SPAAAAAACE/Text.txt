@@ -1,8 +1,10 @@
 
 more accurate colliders
-	collider rotation, per pixel collision
+	per pixel collision
 
 make infinite
+
+deallocation
 
 scaling
 

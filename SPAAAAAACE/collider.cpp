@@ -1,5 +1,7 @@
 #pragma once
 #include"collider.hpp"
+#include<iostream>
+#include<cmath>
 
 int distance(SDL_Point a, SDL_Point b) {
 	return sqrt((a.x - b.x)*(a.x - b.x) + (a.y - b.y)*(a.y - b.y));
@@ -45,23 +47,117 @@ bool checkCollision(Circle* a, SDL_Rect* b) {
 
 Collider::Collider() {
 	colliderRect = { 0, 0, 0, 0 };
+	rotatedPoints[0] = { colliderRect.x, colliderRect.y };
+	rotatedPoints[1] = { colliderRect.x + colliderRect.w, colliderRect.y };
+	rotatedPoints[2] = { colliderRect.x + colliderRect.w, colliderRect.y  + colliderRect.h};
+	rotatedPoints[3] = { colliderRect.x, colliderRect.y + colliderRect.h };
+	angle = 0;
 }
 
-Collider::Collider(int x, int y, int w, int h, int angle) {
+Collider::Collider(int x, int y, int w, int h, float angle) {
 	colliderRect = { x, y, w, h };
 	this->angle = angle;
+	rotate(angle);
 }
 
-SDL_Rect * Collider::getColliderRect() {
+SDL_Rect* Collider::getColliderRect() {
 	return &colliderRect;
 }
 
-void Collider::move(SDL_Point position, int angle) {
+void Collider::move(SDL_Point position) {
 	colliderRect.x = position.x;
 	colliderRect.y = position.y;
+	rotate(angle);
+}
+
+void Collider::move(SDL_Point position, float angle) {
+	move(position);
 	this->angle = angle;
 }
 
+float Collider::getAngle() {
+	return angle;
+}
+
+SDL_Point* Collider::getRotatedPoints() {
+	return rotatedPoints;
+}
+
+void Collider::rotate(float angle) {
+	angle = angle*M_PI / 180;
+
+	//center coordinates
+	int cX = colliderRect.x + colliderRect.w / 2, cY = colliderRect.y + colliderRect.h / 2;
+
+	int tempX = colliderRect.x - cX, tempY = colliderRect.y - cY;
+	rotatedPoints[0].x = (tempX * cos(angle) - tempY * sin(angle)) + cX;
+	rotatedPoints[0].y = (tempX * sin(angle) + tempY * cos(angle)) + cY;
+
+	tempX = (colliderRect.x + colliderRect.w) - cX, tempY = colliderRect.y - cY;
+	rotatedPoints[1].x = (tempX * cos(angle) - tempY * sin(angle)) + cX;
+	rotatedPoints[1].y = (tempX * sin(angle) + tempY * cos(angle)) + cY;
+
+	tempX = colliderRect.x - cX, tempY = (colliderRect.y + colliderRect.h) - cY;
+	rotatedPoints[2].x = (tempX * cos(angle) - tempY * sin(angle)) + cX;
+	rotatedPoints[2].y = (tempX * sin(angle) + tempY * cos(angle)) + cY;
+
+	tempX = (colliderRect.x + colliderRect.w) - cX, tempY = (colliderRect.y + colliderRect.h) - cY;
+	rotatedPoints[3].x = (tempX * cos(angle) - tempY * sin(angle)) + cX;
+	rotatedPoints[3].y = (tempX * sin(angle) + tempY * cos(angle)) + cY;
+}
+
 bool Collider::collides(Collider* collider) {
-	return checkCollision(&colliderRect, collider->getColliderRect());
+	//SAT
+	SDL_Point* collidingPoints = new SDL_Point[4];
+	collidingPoints = collider->getRotatedPoints();
+	SDL_Point axes1[4], axes2[4];
+
+	for (int iPoints = 0; iPoints < 4; iPoints++) {
+		int iPoints2 = (iPoints + 1) % 4;
+		SDL_Point p1 = rotatedPoints[iPoints], p2 = rotatedPoints[iPoints2];
+		SDL_Point normal = { p2.y - p1.y, p1.x - p2.x };
+		int minA = -9999, maxA = -9999;
+		for (int jPoints = 0; jPoints < 4; jPoints++) {
+			int projected = normal.x * rotatedPoints[jPoints].x + normal.y * rotatedPoints[jPoints].y;
+			if (minA == -9999 || projected < minA)
+				minA = projected;
+			if (maxA == -9999 || projected > maxA)
+				maxA = projected;
+		}
+		int minB = -9999, maxB = -9999;
+		for (int jPoints = 0; jPoints < 4; jPoints++) {
+			int projected = normal.x * collidingPoints[jPoints].x + normal.y * collidingPoints[jPoints].y;
+			if (minB == -9999 || projected < minB)
+				minB = projected;
+			if (maxB == -9999 || projected > maxB)
+				maxB = projected;
+		}
+		if (maxA < minB || minA > maxB)
+			return false;
+	}
+
+	for (int iPoints = 0; iPoints < 4; iPoints++) {
+		int iPoints2 = (iPoints + 1) % 4;
+		SDL_Point p1 = collidingPoints[iPoints], p2 = collidingPoints[iPoints2];
+		SDL_Point normal = { p2.y - p1.y, p1.x - p2.x };
+		int minA = -9999, maxA = -9999;
+		for (int jPoints = 0; jPoints < 4; jPoints++) {
+			int projected = normal.x * rotatedPoints[jPoints].x + normal.y * rotatedPoints[jPoints].y;
+			if (minA == -9999 || projected < minA)
+				minA = projected;
+			if (maxA == -9999 || projected > maxA)
+				maxA = projected;
+		}
+		int minB = -9999, maxB = -9999;
+		for (int jPoints = 0; jPoints < 4; jPoints++) {
+			int projected = normal.x * collidingPoints[jPoints].x + normal.y * collidingPoints[jPoints].y;
+			if (minB == -9999 || projected < minB)
+				minB = projected;
+			if (maxB == -9999 || projected > maxB)
+				maxB = projected;
+		}
+		if (maxA < minB || minA > maxB)
+			return false;
+	}
+	return true;
 }

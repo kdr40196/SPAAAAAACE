@@ -114,7 +114,7 @@ class Laser : public Sprite {
 	bool playerStarted;
 	public:
 		static const int LASER_VEL = 1000, RANGE = 1000, LASER_WIDTH = 2, LASER_HEIGHT = 28;
-		Laser(int start_x, int start_y, int x, int y, Level* l, bool playerStarted);
+		Laser(int start_x, int start_y, int x, int y, int angle, Level* l, bool playerStarted);
 		~Laser();
 		void move(float timestep, Level* l, Player* player);
 };

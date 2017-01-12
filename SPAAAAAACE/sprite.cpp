@@ -61,6 +61,7 @@ void Sprite::rotate(int x1, int y1) {
 	int x2 = position.x + width / 2;
 	int y2 = position.y + height / 2;
 	angle = atan2(x1 - x2, y2 - y1) * 180 / M_PI;
+	collider->rotate(angle);
 }
 
 void Sprite::rotate(int x1, int y1, Level* l) {
@@ -78,6 +79,7 @@ void Sprite::rotate(int x1, int y1, Level* l) {
 	else y2 = gScreenHeight / 2;
 
 	angle = atan2(x1 - x2, y2 - y1) * 180 / M_PI;
+	collider->rotate(angle);
 }
 
 int Sprite::getX(bool getScreenPos) {
@@ -111,7 +113,7 @@ int Sprite::getHeight() {
 
 
 
-Laser::Laser(int start_x, int start_y, int x, int y, Level* l, bool playerStarted) {
+Laser::Laser(int start_x, int start_y, int x, int y, int angle, Level* l, bool playerStarted) {
 
 	this->playerStarted = playerStarted;
 	texture = gSpriteSheet;
@@ -123,15 +125,14 @@ Laser::Laser(int start_x, int start_y, int x, int y, Level* l, bool playerStarte
 
 	width = LASER_WIDTH, height = LASER_HEIGHT;
 
-	//rotate sprite
-	if(playerStarted)
-		rotate(x, y, l);
-	else rotate(x, y);
+
+	collider = new Collider(start_x, start_y, LASER_WIDTH, LASER_HEIGHT, angle);
+	this->angle = angle;
 
 	xVel = sin(angle*M_PI/180) * LASER_VEL;
 	yVel = -cos(angle*M_PI/180) * LASER_VEL;
-
-	collider = new Collider(start_x, start_y, LASER_WIDTH, LASER_HEIGHT, angle);
+	//collider->rotate(angle);
+	cout << collider->getAngle() << endl;
 }
 
 Laser::~Laser() { }
@@ -141,7 +142,7 @@ void Laser::move(float timestep, Level* l, Player* player) {
 	position.x += xVel * timestep;
 	position.y += yVel * timestep;
 
-	collider->move(position, angle);
+	collider->move(position);
 
 	if (playerStarted) {
 		for (int i = 0; i < TOTAL_ENEMIES; i++) {
@@ -220,7 +221,7 @@ void Ship::attack(int x, int y, Level* l) {
 	}
 	else playerStarted = false;
 
-	Laser tmp(position.x + SHIP_WIDTH / 2, position.y, x, y, l, playerStarted);
+	Laser tmp(position.x + SHIP_WIDTH / 2, position.y, x, y, angle, l, playerStarted);
 
 	gLasers.push_back(tmp);
 }
@@ -321,7 +322,7 @@ void Player::handleInput(SDL_Event& e, Level* l) {
 
 bool Player::update(float timeStep, Level * l) {
 	move(timeStep, l);
-
+	//cout << position.x << ", " << position.y << endl;
 	if (health == 0) {
 		return false;			//player dead
 	}
