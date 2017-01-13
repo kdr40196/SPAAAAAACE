@@ -130,14 +130,14 @@ int main(int argc, char** argv) {
 			SDL_RenderClear(gRenderer);
 
 			for (int i = 0; i < gLasers.size(); i++) {
-				gLasers[i].render(cam);
+				gLasers[i].render(cam, level);
 			}
 
 			for (int i = 0; i < TOTAL_ENEMIES; i++) {
-				gEnemies[i]->render(cam);
+				gEnemies[i]->render(cam, level);
 			}
 
-			player->render(cam);
+			player->render(cam, level);
 
 			renderInfo(player);
 

@@ -38,4 +38,5 @@ struct Circle { int x, y, r; };
 
 bool checkCollision(SDL_Rect* a, SDL_Rect* b);
 bool checkCollision(Circle* a, SDL_Rect* b);
+bool checkCollision(Circle* a, SDL_Rect* b, int distanceX, int distanceY);
 int distance(SDL_Point a, SDL_Point b);
