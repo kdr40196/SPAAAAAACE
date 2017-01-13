@@ -27,6 +27,23 @@ void Menu::addMenuItem(string text) {
 	refresh();
 }
 
+void Menu::addMenuInfo(string text) {
+	//Text temp(text, &gSmallFont);
+	info.push_back(Text(text, &gSmallFont));
+	//refresh();
+	int maxInfoWidth = 0;
+	for (int i = 0; i < info.size(); i++) {
+		if (info[i].getTextWidth() > maxInfoWidth)
+			maxInfoWidth = info[i].getTextWidth();
+	}
+	maxInfoWidth += 0.05 * gScreenWidth;
+	int yOffset = info.size() * info[0].getTextHeight() + 0.05 * gScreenHeight;
+	for (int i = 0; i < info.size(); i++) {
+		info[i].setPosition(gScreenWidth - maxInfoWidth, gScreenHeight - yOffset);
+		yOffset -= info[i].getTextHeight();
+	}
+}
+
 void Menu::refresh() {
 	for (int i = 0; i < noOfItems; i++) {
 		items[i]->setPosition(items[i]->getX(), items[i]->getY() - items[i]->getHeight() / 2);
@@ -92,6 +109,9 @@ void Menu::display() {
 	title.render();
 	for (int i = 0; i < noOfItems; i++) {
 		items[i]->render();
+	}
+	for (int i = 0; i < info.size(); i++) {
+		info[i].render();
 	}
 	gMenuItemPointer.setPosition(items[currentIndex]->getX() - gMenuItemPointer.getTextWidth(), items[currentIndex]->getY());
 	gMenuItemPointer.render();

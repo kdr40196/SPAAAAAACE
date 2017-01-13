@@ -11,10 +11,12 @@ class Menu {
 	vector<shared_ptr<TextButton>> items;
 	Text title;
 	int noOfItems, currentIndex;
+	vector<Text> info;
 	public:
 		Menu();
 		void addMenuTitle(string text);
 		void addMenuItem(string text);
+		void addMenuInfo(string text);
 		void refresh();
 		void exit();
 		string handleInput(SDL_Event& e);

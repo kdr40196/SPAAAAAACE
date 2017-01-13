@@ -51,6 +51,10 @@ bool loadMainMenu(Menu* mainMenu) {
 	mainMenu->addMenuTitle("SPAAAAAACE");
 	mainMenu->addMenuItem("PLAY");
 	mainMenu->addMenuItem("EXIT");
+	mainMenu->addMenuInfo("WASD TO MOVE");
+	mainMenu->addMenuInfo("MOVE MOUSE TO AIM");
+	mainMenu->addMenuInfo("CLICK TO SHOOT");
+	mainMenu->addMenuInfo("ESC TO PAUSE");
 	return true;
 }
 
