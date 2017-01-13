@@ -135,7 +135,7 @@ void resume(Player * player) {
 
 void updateLasers() {
 	for (int i = 0; i < gLasers.size(); i++) {
-		if (gLasers[i].getX() == -999 || gLasers[i].getY() == -999) {
+		if (gLasers[i].getX() == -9999 || gLasers[i].getY() == -9999) {
 			gLasers.erase(gLasers.begin() + i);
 		}
 	}

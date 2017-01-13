@@ -162,28 +162,52 @@ void Laser::move(float timestep, Level* l, Player* player) {
 	else {
 		if (collider->collides(player->getCollider())) {
 			player->takeDamage();
-			position.x = position.y = -999;
+			position.x = position.y = -9999;
 		}
 	}
 
-	if (distance(start, position) > RANGE || position.x < 0 || position.y < 0 || position.x > l->getWidth() || position.y > l->getHeight())
-		position.x = position.y = -999;
-	/*if (distance(start, position) > RANGE) {
-		position = { -999, -999 };
-		return;
+	/*if (distance(start, position) > RANGE || position.x < 0 || position.y < 0 || position.x > l->getWidth() || position.y > l->getHeight())
+		position.x = position.y = -9999;*/
+	bool dead = true;
+	if (distance(start, position) < RANGE) {
+		dead = false;
 	}
-	if (position.x < 0) {
-		position.x = l->getWidth();
+	else if (distance(start, { position.x - l->getWidth(), position.y }) < RANGE) {
+		dead = false;
 	}
-	else if (position.x > l->getWidth()) {
-		position.x = 0;
+	else if (distance(start, { position.x + l->getWidth(), position.y }) < RANGE) {
+		dead = false;
 	}
-	if (position.y < 0) {
-		position.y = l->getHeight();
+	else if (distance(start, { position.x, position.y - l->getHeight()}) < RANGE) {
+		dead = false;
 	}
-	else if (position.y < l->getHeight()) {
-		position.y = 0;
-	}*/
+	else if (distance(start, { position.x, position.y + l->getHeight() }) < RANGE) {
+		dead = false;
+	}
+	else if (distance(start, { position.x - l->getWidth(), position.y - l->getHeight() }) < RANGE) {
+		dead = false;
+	}
+	else if (distance(start, { position.x + l->getWidth(), position.y + l->getHeight() }) < RANGE) {
+		dead = false;
+	}
+
+	if (dead) {
+		position = { -9999, -9999 };
+	}
+	else {
+		if (position.x < 0) {
+			position.x = l->getWidth();
+		}
+		else if (position.x > l->getWidth()) {
+			position.x = 0;
+		}
+		if (position.y < 0) {
+			position.y = l->getHeight();
+		}
+		else if (position.y > l->getHeight()) {
+			position.y = 0;
+		}
+	}
 }
 
 
@@ -520,10 +544,37 @@ void Enemy::attack(Player* player, Level* l) {
 	}
 }
 
-void Enemy::rotate(int x, int y) {
+void Enemy::rotate(int x, int y, Level* level) {
 	int resetAngle = angle;
 	bool collision = false;
-	Sprite::rotate(x, y);
+	int x1 = x, y1 = y;
+	int minDistance = distance(position, { x, y });
+	if (distance(position, { x - level->getWidth(), y }) < minDistance) {
+		x1 = x - level->getWidth();
+		y1 = y;
+	}
+	if (distance(position, { x + level->getWidth(), y }) < minDistance) {
+		x1 = x + level->getWidth();
+		y1 = y;
+	}
+	if (distance(position, { x, y - level->getHeight() }) < minDistance) {
+		x1 = x;
+		y1 = y - level->getHeight();
+	}
+	if (distance(position, { x, y + level->getHeight() }) < minDistance) {
+		x1 = x;
+		y1 = y + level->getHeight();
+	}
+	if (distance(position, { x - level->getWidth(), y - level->getHeight() }) < minDistance) {
+		x1 = x - level->getWidth();
+		y1 = y - level->getHeight();
+	}
+	if (distance(position, { x + level->getWidth(), y + level->getHeight() }) < minDistance) {
+		x1 = x + level->getWidth();
+		y1 = y + level->getHeight();
+	}
+
+	Sprite::rotate(x1, y1);
 	for (int iEnemies = 0; iEnemies < TOTAL_ENEMIES; iEnemies++) {
 		if (gEnemies[iEnemies]->getId() != id) {
 			if (collider->collides(gEnemies[iEnemies]->getCollider())) {
@@ -545,7 +596,7 @@ void Enemy::update(float timeStep, Level* level, Player* player) {
 		if (state == EnemyState::IDLE || state == EnemyState::RETURNING_TO_IDLE)
 			originalAngle = angle;
 
-		rotate(player->getX() + SHIP_WIDTH / 2, player->getY() + SHIP_HEIGHT / 2);
+		rotate(player->getX() + SHIP_WIDTH / 2, player->getY() + SHIP_HEIGHT / 2, level);
 
 		state = EnemyState::ATTACKING;
 		attack(player, level);
@@ -556,7 +607,7 @@ void Enemy::update(float timeStep, Level* level, Player* player) {
 			state = EnemyState::COOLDOWN;
 		}
 		else if(state == EnemyState::COOLDOWN){
-			rotate(player->getX() + SHIP_WIDTH / 2, player->getY() + SHIP_HEIGHT / 2);
+			rotate(player->getX() + SHIP_WIDTH / 2, player->getY() + SHIP_HEIGHT / 2, level);
 			if (cooldownTimer.getTicks() >= COOLDOWN_TIME) {
 				state = EnemyState::RETURNING_TO_IDLE;
 				angle = originalAngle;

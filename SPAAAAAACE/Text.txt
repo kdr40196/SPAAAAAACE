@@ -3,7 +3,8 @@ more accurate colliders
 	improve rotation on collision
 	make colliders as vectors
 
-make infinite - improve rotate functions, fix shooting problem
+make infinite
+	enemy respawn on borders
 
 deallocation
 
