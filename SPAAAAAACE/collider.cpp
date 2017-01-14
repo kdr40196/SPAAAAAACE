@@ -183,11 +183,11 @@ void Collider::rotate(float angle) {
 	rotatedColliderRect[1].x = (tempX * cos(angle) - tempY * sin(angle)) + cX;
 	rotatedColliderRect[1].y = (tempX * sin(angle) + tempY * cos(angle)) + cY;
 
-	tempX = colliderRect.x - cX, tempY = (colliderRect.y + colliderRect.h) - cY;
+	tempX = (colliderRect.x + colliderRect.w) - cX, tempY = (colliderRect.y + colliderRect.h) - cY;
 	rotatedColliderRect[2].x = (tempX * cos(angle) - tempY * sin(angle)) + cX;
 	rotatedColliderRect[2].y = (tempX * sin(angle) + tempY * cos(angle)) + cY;
 
-	tempX = (colliderRect.x + colliderRect.w) - cX, tempY = (colliderRect.y + colliderRect.h) - cY;
+	tempX = colliderRect.x - cX, tempY = (colliderRect.y + colliderRect.h) - cY;
 	rotatedColliderRect[3].x = (tempX * cos(angle) - tempY * sin(angle)) + cX;
 	rotatedColliderRect[3].y = (tempX * sin(angle) + tempY * cos(angle)) + cY;
 
@@ -203,11 +203,11 @@ void Collider::rotate(float angle) {
 		rotatedColliders[iColliders][1].x = (tempX * cos(angle) - tempY * sin(angle)) + cX;
 		rotatedColliders[iColliders][1].y = (tempX * sin(angle) + tempY * cos(angle)) + cY;
 
-		tempX = colliders[iColliders].x - cX, tempY = (colliders[iColliders].y + colliders[iColliders].h) - cY;
+		tempX = (colliders[iColliders].x + colliders[iColliders].w) - cX, tempY = (colliders[iColliders].y + colliders[iColliders].h) - cY;
 		rotatedColliders[iColliders][2].x = (tempX * cos(angle) - tempY * sin(angle)) + cX;
 		rotatedColliders[iColliders][2].y = (tempX * sin(angle) + tempY * cos(angle)) + cY;
 
-		tempX = (colliders[iColliders].x + colliders[iColliders].w) - cX, tempY = (colliders[iColliders].y + colliders[iColliders].h) - cY;
+		tempX = colliders[iColliders].x - cX, tempY = (colliders[iColliders].y + colliders[iColliders].h) - cY;
 		rotatedColliders[iColliders][3].x = (tempX * cos(angle) - tempY * sin(angle)) + cX;
 		rotatedColliders[iColliders][3].y = (tempX * sin(angle) + tempY * cos(angle)) + cY;
 	}
