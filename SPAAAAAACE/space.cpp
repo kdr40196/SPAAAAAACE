@@ -74,7 +74,7 @@ bool loadGameOverMenu(Menu * gameOverMenu) {
 }
 
 bool loadGame() {
-	if (!gSpriteSheet->loadTextureFromImage("ship.png", SDL_MapRGB(SDL_GetWindowSurface(gWindow.getReference())->format, Enemy::color.r, Enemy::color.g, Enemy::color.b)))
+	if (!gSpriteSheet->loadTextureFromImage("images/ship.png", SDL_MapRGB(SDL_GetWindowSurface(gWindow.getReference())->format, Enemy::color.r, Enemy::color.g, Enemy::color.b)))
 		return false;
 
 	scorePrompt.setText("SCORE");

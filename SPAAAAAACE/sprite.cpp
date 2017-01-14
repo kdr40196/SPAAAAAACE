@@ -392,7 +392,7 @@ void Player::handleInput(SDL_Event& e, Level* l) {
 
 bool Player::update(float timeStep, Level * l) {
 	move(timeStep, l);
-	cout << position.x << ", " << position.y << endl;
+	//cout << position.x << ", " << position.y << endl;
 
 	if (health == 0) {
 		return false;			//player dead
