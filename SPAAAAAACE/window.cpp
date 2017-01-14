@@ -22,7 +22,8 @@ SDL_Window* Window::getReference() {
 }
 
 bool Window::init() {
-	window = SDL_CreateWindow("SPAAAAAACE", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, gScreenWidth, gScreenHeight, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+	window = SDL_CreateWindow("SPAAAAAACE", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 
+		gScreenWidth, gScreenHeight, SDL_WINDOW_SHOWN | SDL_WINDOW_SHOWN);
 	if (window != nullptr) {
 		width = gScreenWidth;
 		height = gScreenHeight;
@@ -37,17 +38,17 @@ SDL_Renderer* Window::createRenderer() {
 
 void Window::handleEvent(SDL_Event & e) {
 	switch (e.window.event) {
-	case SDL_WINDOWEVENT_SIZE_CHANGED:
+	/*case SDL_WINDOWEVENT_SIZE_CHANGED:
 		width = gScreenWidth = e.window.data1;
 		height = gScreenHeight = e.window.data2;
-		break;
+		break;*/
 
 	case SDL_WINDOWEVENT_MINIMIZED:
 		minimized = true;
 		break;
 
-	case SDL_WINDOWEVENT_MAXIMIZED:
-		minimized = false;
+	/*case SDL_WINDOWEVENT_MAXIMIZED:
+		minimized = false;*/
 
 	case SDL_WINDOWEVENT_RESTORED:
 		minimized = false;
