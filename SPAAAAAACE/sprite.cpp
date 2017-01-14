@@ -596,12 +596,12 @@ void Enemy::rotate(int x, int y, Level* level) {
 	tempDistance = distance(position, { x + level->getWidth(), y - level->getHeight() });
 	if (tempDistance< minDistance) {
 		x1 = x + level->getWidth();
-		y1 = y + level->getHeight();
+		y1 = y - level->getHeight();
 		minDistance = tempDistance;
 	}
 	tempDistance = distance(position, { x - level->getWidth(), y + level->getHeight() });
 	if (tempDistance< minDistance) {
-		x1 = x + level->getWidth();
+		x1 = x - level->getWidth();
 		y1 = y + level->getHeight();
 		minDistance = tempDistance;
 	}
