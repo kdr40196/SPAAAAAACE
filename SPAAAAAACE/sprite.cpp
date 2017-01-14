@@ -367,20 +367,7 @@ void Player::handleInput(SDL_Event& e, Level* l) {
 	if (e.type == SDL_MOUSEMOTION) {
 		int x, y;
 		SDL_GetMouseState(&x, &y);
-		int resetAngle = angle;
-		bool collision = false;
 		rotate(x, y, gScreenWidth / 2, gScreenHeight / 2);
-		for (int iEnemies = 0; iEnemies < TOTAL_ENEMIES; iEnemies++) {
-			if (collider->collides(gEnemies[iEnemies]->getCollider())) {
-				collision = true;
-				break;
-			}
-		}
-		if (collision) {
-			angle = resetAngle;
-			collider->rotate(angle);
-		}
-		//rotate(x, y, gScreenWidth / 2, gScreenHeight / 2);
 	}
 
 	if (e.type == SDL_MOUSEBUTTONDOWN) {
@@ -409,21 +396,14 @@ bool Player::update(float timeStep, Level * l) {
 void Player::move(float timeStep, Level *l) {
 	int x, y;
 	SDL_GetMouseState(&x, &y);
-	bool collision = false;
-	int resetAngle = angle;
 	rotate(x, y, gScreenWidth / 2, gScreenHeight / 2);
 	for (int iEnemies = 0; iEnemies < TOTAL_ENEMIES; iEnemies++) {
 		if (collider->collides(gEnemies[iEnemies]->getCollider())) {
-			collision = true;
+			gEnemies[iEnemies]->move(-timeStep - timeStep, l, this);
 			break;
 		}
 	}
-	if (collision) {
-		angle = resetAngle;
-		collider->rotate(angle);
-	}
 	Ship::move(timeStep, l);
-	//rotate(x, y, gScreenWidth / 2, gScreenHeight / 2);
 }
 
 void Player::takeDamage() {
@@ -505,7 +485,7 @@ void Enemy::move(float timeStep, Level* l, Player* player) {
 
 	collider->move(position, angle);
 
-	//if(collidiing with player || going out of level) decrement x, y and update collider
+	//going out of level
 	if (position.x < 0 || position.x + SHIP_WIDTH > l->getWidth() || 
 		position.y < 0 || position.y + SHIP_HEIGHT > l->getHeight()) {
 		
@@ -529,16 +509,6 @@ void Enemy::move(float timeStep, Level* l, Player* player) {
 
 			break;
 		}
-	}
-
-	//check if colliding with player
-	if (collider->collides(player->getCollider())) {
-		position.x -= xDisplacement, position.y -= yDisplacement;
-
-		angle = (int(angle) + 180) % 360;
-		xVel = -xVel;
-		yVel = -yVel;
-		collider->move(position, angle);
 	}
 
 	attackRadar.x = position.x, attackRadar.y = position.y;
@@ -606,21 +576,7 @@ void Enemy::rotate(int x, int y, Level* level) {
 		minDistance = tempDistance;
 	}
 
-	int resetAngle = angle;
-	bool collision = false;
 	Sprite::rotate(x1, y1);
-	for (int iEnemies = 0; iEnemies < TOTAL_ENEMIES; iEnemies++) {
-		if (gEnemies[iEnemies]->getId() != id) {
-			if (collider->collides(gEnemies[iEnemies]->getCollider())) {
-				collision = true;
-				break;
-			}
-		}
-	}
-	if (collision) {
-		angle = resetAngle;
-		collider->rotate(angle);
-	}
 }
 
 void Enemy::update(float timeStep, Level* level, Player* player) {

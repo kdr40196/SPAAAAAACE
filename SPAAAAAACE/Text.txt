@@ -1,11 +1,4 @@
 
-more accurate colliders
-	improve rotation on collision
-	make colliders as vectors
-
-make infinite
-	laser issue on borders
-
 deallocation
 
 scaling
