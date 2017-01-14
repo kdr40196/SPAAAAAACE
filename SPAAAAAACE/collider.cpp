@@ -79,6 +79,40 @@ bool checkCollision(Circle* a, SDL_Rect* b) {
 	return false;
 }
 
+bool checkCollision(Circle* a, SDL_Rect* b, int distanceX, int distanceY) {
+	int cX, cY;					//closest x, y
+	if (a->x < b->x)
+		cX = b->x;
+	else if (a->x > b->x + b->w)
+		cX = b->x + b->w;
+	else cX = a->x;
+
+	if (a->y < b->y)
+		cY = b->y;
+	else if (a->y > b->y + b->h)
+		cY = b->y + b->h;
+	else cY = a->y;
+
+	if (distance({ cX, cY }, { a->x, a->y }) < a->r)
+		return true;
+	else if (distance({ cX - (distanceX - b->w), cY }, { a->x, a->y }) < a->r)
+		return true;
+	else if (distance({ cX, cY - (distanceY - b->h) }, { a->x, a->y }) < a->r)
+		return true;
+	else if (distance({ cX - (distanceX - b->w), cY - (distanceY - b->h) }, { a->x, a->y }) < a->r)
+		return true;
+	else if (distance({ cX + (distanceX - b->w), cY }, { a->x, a->y }) < a->r)
+		return true;
+	else if (distance({ cX, cY + (distanceY - b->h) }, { a->x, a->y }) < a->r)
+		return true;
+	else if (distance({ cX + (distanceX - b->w), cY + (distanceY - b->h) }, { a->x, a->y }) < a->r)
+		return true;
+	else if (distance({ cX + (distanceX - b->w), cY - (distanceY - b->h) }, { a->x, a->y }) < a->r)
+		return true;
+	else if (distance({ cX - (distanceX - b->w), cY + (distanceY - b->h) }, { a->x, a->y }) < a->r)
+		return true;
+	return false;
+}
 
 Collider::Collider() {
 	colliderRect = { 0, 0, 0, 0 };

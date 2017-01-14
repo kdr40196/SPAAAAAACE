@@ -19,8 +19,7 @@ class Sprite {
 	protected:
 		int width, height;
 		SDL_Point position;
-		float angle;
-		//Texture* texture;
+		int angle;
 		shared_ptr<Texture> texture;
 		SDL_Rect clipRect;
 		Collider* collider;
@@ -29,14 +28,15 @@ class Sprite {
 		Sprite(string path);
 		Sprite(Texture texture);
 		Sprite(Text text);
-		void render(Camera* cam = nullptr);
+		void render(Camera* cam = nullptr, Level* l = nullptr);
 		void rotate(int x1, int y1);
-		void rotate(int x1, int y1, Level*);
-		int getX(bool screenPos = false);
-		int getY(bool screePos = false);
+		void rotate(int x1, int y1, int x2, int y2);
+		void rotate(int x1, int y1, Level* l);
+		int getX();
+		int getY();
 		Collider* getCollider();
-		/*int getWidth();
-		int getHeight();*/
+		int getWidth();
+		int getHeight();
 };
 
 class Ship : public Sprite {
@@ -97,7 +97,7 @@ class Enemy :public Ship {
 		void update(float timeStep, Level* level, Player* player);
 		void move(float timeStep, Level* level, Player* player);
 		void attack(Player* player, Level* level);
-		void rotate(int x, int y);
+		void rotate(int x, int y, Level* level);
 		void spawn(Level*, Camera*);
 		void takeDamage();
 		void die();
