@@ -7,8 +7,6 @@
 Texture::Texture() {
 	texture = nullptr;
 	width = height = 0;
-	//pitch = 0;
-	//pixels = nullptr;
 }
 
 Texture::Texture(const Texture & obj) {
@@ -29,21 +27,11 @@ Texture Texture::operator=(const Texture & obj) {
 	return tempTexture;
 }
 
-/*void* Texture::getPixels() {
-	return pixels;
-}
-
-int Texture::getPitch() {
-	return pitch;
-}*/
-
 void Texture::free() {
 	if (texture != nullptr) {
 		SDL_DestroyTexture(texture);
 		texture = nullptr;
 		width = height = 0;
-		/*pitch = 0;
-		pixels = nullptr;*/
 	}
 }
 
@@ -69,65 +57,7 @@ bool Texture::loadTextureFromImage(string path, Uint32 color) {
 	return true;
 }
 
-/*bool Texture::loadTexture(string path) {
-	free();
-	SDL_Surface* surface = IMG_Load(path.c_str());
-	if (surface == nullptr) {
-		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Error", "Unable to load image", gWindow.getReference());
-		return false;
-	}
-
-	SDL_Surface* tempSurface = SDL_ConvertSurfaceFormat(surface, SDL_PIXELFORMAT_RGBA8888, 0);
-	SDL_Surface* formattedSurface = SDL_ConvertSurface(tempSurface, SDL_GetWindowSurface(gWindow.getReference())->format, 0);
-
-	texture = SDL_CreateTexture(gRenderer, SDL_GetWindowPixelFormat(gWindow.getReference()),
-		SDL_TEXTUREACCESS_STREAMING, formattedSurface->w, formattedSurface->h);
-
-	if (texture == nullptr) {
-		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Error", "Unable to create blank texture", gWindow.getReference());
-		return false;
-	}
-
-	//SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
-
-	lock();
-
-	memcpy(pixels, formattedSurface->pixels, formattedSurface->pitch * formattedSurface->h);
-
-	unlock();
-
-	width = formattedSurface->w;
-	height = formattedSurface->h;
-	SDL_FreeSurface(surface);
-	SDL_FreeSurface(formattedSurface);
-	surface = formattedSurface = nullptr;
-	return true;
-}
-
-bool Texture::loadTexture(string path, Uint32 color) {
-	
-	if (!loadTexture(path))
-		return false;
-
-	SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
-	
-	lock();
-
-	Uint32* upixels = (Uint32*)pixels;
-	int pixelCount = (pitch / 4) * height;
-	Uint32 colorKey = SDL_MapRGBA(SDL_GetWindowSurface(gWindow.getReference())->format, 0, 0, 0, 255);
-
-	for (int i = 0; i < pixelCount; i++) {
-		if(upixels[i] == colorKey)
-			upixels[i] = color;
-	}
-
-	unlock();
-
-	return true;
-}*/
-
-bool Texture::loadTextureFromText(string text, Font* font, SDL_Color color) {
+bool Texture::loadTextureFromText(string text, shared_ptr<Font> font, SDL_Color color) {
 	free();
 	SDL_Surface* textSurface = TTF_RenderText_Blended_Wrapped(font->getFont(), text.c_str(), color, 300);
 	if (textSurface == nullptr) {
@@ -164,27 +94,3 @@ void Texture::render(int x, int y, SDL_Rect* clipRect, double angle,
 int Texture::getWidth() { return width; }
 
 int Texture::getHeight() { return height; }
-
-/*bool Texture::lock() {
-	if (pixels != nullptr) {
-		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Error", "Texture already locked", gWindow.getReference());;
-		return false;
-	}
-
-	if (SDL_LockTexture(texture, nullptr, &pixels, &pitch) != 0) {
-		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Error", "Unable to lock texture", gWindow.getReference());;
-		return false;
-	}
-	return true;
-}
-
-bool Texture::unlock() {
-	if (pixels == nullptr) {
-		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Error", "Texture already unlocked", gWindow.getReference());;
-		return false;
-	}
-	SDL_UnlockTexture(texture);
-	pixels = nullptr;
-	pitch = 0;
-	return true;
-}*/

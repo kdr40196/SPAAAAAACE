@@ -6,12 +6,12 @@ Text scoreText, healthText, scorePrompt, healthPrompt, gMenuItemPointer;
 Text::Text() {
 	position = { 0, 0 };
 	textColor = { 255, 255, 255 };
-	text = "";
-	font = &gSmallFont;
+	text = " ";
+	font = gSmallFont;
 	textTexture = make_shared<Texture>();
 }
 
-Text::Text(string text, Font* font) {
+Text::Text(string text, shared_ptr<Font> font) {
 	position = { 0, 0 };
 	this->text = text;
 	textColor = { 255, 255, 255 };
@@ -20,7 +20,7 @@ Text::Text(string text, Font* font) {
 	textTexture->loadTextureFromText(text, font, textColor);
 }
 
-Text::Text(string text, Font* font, int x, int y) {
+Text::Text(string text, shared_ptr<Font> font, int x, int y) {
 	position = { x, y };
 	this->text = text;
 	textColor = { 255, 255, 255 };
@@ -35,6 +35,12 @@ Text::Text(const Text & obj) {
 	textTexture = obj.textTexture;
 	this->font = font;
 	textColor = obj.textColor;
+}
+
+Text::~Text() {
+	text = " ";
+	textTexture.reset();
+	font.reset();
 }
 
 Text Text::operator=(const Text & obj) {
@@ -59,7 +65,6 @@ int Text::getY() {
 	return position.y;
 }
 
-
 bool Text::setText(string text) {
 	textTexture->loadTextureFromText(text, font, textColor);
 	this->text = text;
@@ -82,12 +87,12 @@ SDL_Color Text::getColor() {
 	return textColor;
 }
 
-void Text::setFont(Font * font) {
+void Text::setFont(shared_ptr<Font> font) {
 	this->font = font;
 	setText(text);
 }
 
-Font* Text::getFont() {
+shared_ptr<Font> Text::getFont() {
 	return font;
 }
 

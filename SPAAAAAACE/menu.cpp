@@ -9,28 +9,26 @@ Menu::Menu() {
 
 void Menu::addMenuTitle(string text) {
 	title.setText(text);
-	title.setFont(&gLargeFont);
+	title.setFont(gLargeFont);
 	title.setPosition((gScreenWidth - title.getTextWidth()) / 2, gScreenHeight / 4);
 }
 
 void Menu::addMenuItem(string text) {
-	TextButton item(0, 0, new Text(text, &gSmallFont));
+	TextButton item(0, 0, make_shared<Text>(Text(text, gSmallFont)));
 	if (noOfItems == 0) {
 		item.setPosition(gScreenWidth / 4, gScreenHeight / 2);
 		currentIndex = 0;
 	}
 	else {
-		item.setPosition(gScreenWidth / 4, items[noOfItems - 1]->getY() + items[noOfItems - 1]->getHeight());
+		item.setPosition(gScreenWidth / 4, items[noOfItems - 1].getY() + items[noOfItems - 1].getHeight());
 	}
-	items.push_back(make_shared<TextButton>(item));
+	items.push_back(item);
 	noOfItems++;
 	refresh();
 }
 
 void Menu::addMenuInfo(string text) {
-	//Text temp(text, &gSmallFont);
-	info.push_back(Text(text, &gSmallFont));
-	//refresh();
+	info.push_back(Text(text, gSmallFont));
 	int maxInfoWidth = 0;
 	for (int i = 0; i < info.size(); i++) {
 		if (info[i].getTextWidth() > maxInfoWidth)
@@ -46,7 +44,7 @@ void Menu::addMenuInfo(string text) {
 
 void Menu::refresh() {
 	for (int i = 0; i < noOfItems; i++) {
-		items[i]->setPosition(items[i]->getX(), items[i]->getY() - items[i]->getHeight() / 2);
+		items[i].setPosition(items[i].getX(), items[i].getY() - items[i].getHeight() / 2);
 	}
 }
 
@@ -63,7 +61,7 @@ string Menu::handleInput(SDL_Event& e) {
 			if (currentIndex <= 0)
 				currentIndex = noOfItems - 1;
 			else currentIndex--;
-			gMenuItemPointer.setPosition(items[currentIndex]->getX() - gMenuItemPointer.getTextWidth(), items[currentIndex]->getY());
+			gMenuItemPointer.setPosition(items[currentIndex].getX() - gMenuItemPointer.getTextWidth(), items[currentIndex].getY());
 			break;
 
 		case SDLK_s:
@@ -71,11 +69,11 @@ string Menu::handleInput(SDL_Event& e) {
 			if (currentIndex >= noOfItems - 1)
 				currentIndex = 0;
 			else currentIndex++;
-			gMenuItemPointer.setPosition(items[currentIndex]->getX() - gMenuItemPointer.getTextWidth(), items[currentIndex]->getY());
+			gMenuItemPointer.setPosition(items[currentIndex].getX() - gMenuItemPointer.getTextWidth(), items[currentIndex].getY());
 			break;
 
 		case SDLK_RETURN:
-			action = items[currentIndex]->getButtonText();
+			action = items[currentIndex].getButtonText();
 			currentIndex = 0;
 
 		}
@@ -84,7 +82,7 @@ string Menu::handleInput(SDL_Event& e) {
 		int x, y;
 		SDL_GetMouseState(&x, &y);
 		for (int i = 0; i < noOfItems; i++) {
-			if (x >= items[i]->getX() && x <= items[i]->getX() + items[i]->getWidth() && y >= items[i]->getY() && y <= items[i]->getY() + items[i]->getHeight()) {
+			if (x >= items[i].getX() && x <= items[i].getX() + items[i].getWidth() && y >= items[i].getY() && y <= items[i].getY() + items[i].getHeight()) {
 				currentIndex = i;
 				break;
 			}
@@ -94,9 +92,9 @@ string Menu::handleInput(SDL_Event& e) {
 		int x, y;
 		SDL_GetMouseState(&x, &y);
 		for (int i = 0; i < noOfItems; i++) {
-			if (x >= items[i]->getX() && x <= items[i]->getX() + items[i]->getWidth() && y >= items[i]->getY() && y <= items[i]->getY() + items[i]->getHeight()) {
+			if (x >= items[i].getX() && x <= items[i].getX() + items[i].getWidth() && y >= items[i].getY() && y <= items[i].getY() + items[i].getHeight()) {
 				currentIndex = i;
-				action = items[currentIndex]->getButtonText();
+				action = items[currentIndex].getButtonText();
 				currentIndex = 0;
 				break;
 			}
@@ -108,12 +106,12 @@ string Menu::handleInput(SDL_Event& e) {
 void Menu::display() {
 	title.render();
 	for (int i = 0; i < noOfItems; i++) {
-		items[i]->render();
+		items[i].render();
 	}
 	for (int i = 0; i < info.size(); i++) {
 		info[i].render();
 	}
-	gMenuItemPointer.setPosition(items[currentIndex]->getX() - gMenuItemPointer.getTextWidth(), items[currentIndex]->getY());
+	gMenuItemPointer.setPosition(items[currentIndex].getX() - gMenuItemPointer.getTextWidth(), items[currentIndex].getY());
 	gMenuItemPointer.render();
 }
 

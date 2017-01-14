@@ -20,6 +20,6 @@ extern SDL_Renderer* gRenderer;
 extern shared_ptr<Texture> gSpriteSheet;						//texture storing ship images and maybe projectile image
 extern Enemy** gEnemies;							//references to all enemy ships
 extern vector<Laser> gLasers;
-extern Font gSmallFont, gLargeFont;
+extern shared_ptr<Font> gSmallFont, gLargeFont;
 
 extern int gScore;

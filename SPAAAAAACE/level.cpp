@@ -6,7 +6,7 @@ Level::Level(int width, int height) {
 }
 
 void Level::render() {
-	levelTexture.render(0, 0);
+	levelTexture->render(0, 0);
 }
 
 int Level::getWidth() {

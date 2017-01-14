@@ -49,6 +49,13 @@ Sprite::Sprite(Text text) {
 	collider = nullptr;
 }
 
+Sprite::~Sprite() {
+	width = height = angle = 0;
+	texture.reset();
+	collider->getColliders();
+	collider = nullptr;
+}
+
 
 void Sprite::render(Camera* cam, Level* l) {
 	if (cam != nullptr) {
@@ -627,9 +634,8 @@ void Enemy::spawn(Level* level, Camera* cam) {
 		shipColliderRect = { position.x, position.y, SHIP_WIDTH, SHIP_HEIGHT };
 		
 		//check if enemy is spawned in player area
-		//if (!checkCollision(&shipColliderRect, cam->getRect())) {
-		if(position.x > camRect.x && position.x < (camRect.x + camRect.w) % level->getWidth()
-			&& position.y > camRect.y && position.y < (camRect.y + camRect.h) % level->getHeight()) {
+		if(position.x > camRect.x && (position.x < (camRect.x + camRect.w) || position.x < (camRect.x + camRect.w) % level->getWidth())
+			&& position.y > camRect.y && (position.y < (camRect.y + camRect.h) || position.y < camRect.y + camRect.h) % level->getHeight()) {
 			
 			success = false;
 		}

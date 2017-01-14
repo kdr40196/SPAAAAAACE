@@ -1,16 +1,19 @@
 #pragma once
 
 #include<iostream>
+#include<memory>
 #include<SDL.h>
 using namespace std;
 
 class Text;
 
 class Button {
-	SDL_Point position;
+	protected:
+		SDL_Point position;
 	public:
 		Button();
 		Button(int x, int y);
+		~Button();
 		void setPosition(int x, int y);
 		int getX();
 		int getY();
@@ -18,10 +21,11 @@ class Button {
 };
 
 class TextButton: public Button {
-	Text* text;
+	shared_ptr<Text> text;
 	public:
 		TextButton();
-		TextButton(int x, int y, Text* text);
+		TextButton(int x, int y, shared_ptr<Text> text);
+		~TextButton();
 		void render();
 		string getButtonText();
 		void setText(string text);

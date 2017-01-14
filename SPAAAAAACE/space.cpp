@@ -24,15 +24,17 @@ bool init() {
 		return false;
 	}
 
-	gSmallFont.setFont("BANK.TTF", 20);
-	gLargeFont.setFont("BANK.TTF", 40);
-	if (gSmallFont.getFont() == nullptr || gLargeFont.getFont() == nullptr) {
+	gSmallFont = make_shared<Font>(Font("BANK.TTF", 20));
+	gLargeFont = make_shared<Font>(Font("BANK.TTF", 40));
+	/*gSmallFont->setFont("BANK.TTF", 20);
+	gLargeFont->setFont("BANK.TTF", 40);*/
+	if (gSmallFont->getFont() == nullptr || gLargeFont->getFont() == nullptr) {
 		cout << "Unable to load font" << endl;
 		return false;
 	}
 
+	gMenuItemPointer.setFont(gSmallFont);
 	gMenuItemPointer.setText(">");
-	gMenuItemPointer.setFont(&gSmallFont);
 
 	srand(SDL_GetTicks());
 
@@ -77,12 +79,16 @@ bool loadGame() {
 	if (!gSpriteSheet->loadTextureFromImage("images/ship.png", SDL_MapRGB(SDL_GetWindowSurface(gWindow.getReference())->format, Enemy::color.r, Enemy::color.g, Enemy::color.b)))
 		return false;
 
+	scorePrompt.setFont(gSmallFont);
 	scorePrompt.setText("SCORE");
 	scorePrompt.setPosition(0, 0);
+	scoreText.setFont(gSmallFont);
 	scoreText.setText("0");
 	scoreText.setPosition(0, scorePrompt.getY() + scorePrompt.getTextHeight());
+	healthPrompt.setFont(gSmallFont);
 	healthPrompt.setText("HEALTH");
 	healthPrompt.setPosition(0, scoreText.getY() + scoreText.getTextHeight());
+	healthText.setFont(gSmallFont);
 	healthText.setText("100");
 	healthText.setPosition(0, healthPrompt.getY() + healthPrompt.getTextHeight());
 

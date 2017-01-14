@@ -8,7 +8,7 @@ using namespace std;
 
 
 class Menu {
-	vector<shared_ptr<TextButton>> items;
+	vector<TextButton> items;
 	Text title;
 	int noOfItems, currentIndex;
 	vector<Text> info;

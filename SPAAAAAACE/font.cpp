@@ -1,7 +1,8 @@
 #include "font.hpp"
 #include "g.hpp"
+#include<memory>
 
-Font gSmallFont, gLargeFont;
+shared_ptr<Font> gSmallFont, gLargeFont;
 
 Font::Font() {
 	font = nullptr;

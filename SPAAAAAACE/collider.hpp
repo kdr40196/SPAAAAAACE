@@ -13,6 +13,7 @@ class Collider {
 	public:
 		Collider();
 		Collider(int x, int y, int w, int h, float angle = 0);
+		~Collider();
 		SDL_Rect* getColliderRect();
 		bool collides(Collider*);
 		void move(SDL_Point position);

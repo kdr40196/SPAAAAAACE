@@ -134,6 +134,17 @@ Collider::Collider(int x, int y, int w, int h, float angle) {
 	rotatedColliders = nullptr;
 }
 
+Collider::~Collider() {
+	delete[] colliders;
+	colliders = nullptr;
+	for (int i = 0; i < noOfColliders; i++) {
+		delete[] rotatedColliders;
+		rotatedColliders[i] = nullptr;
+	}
+	delete[] rotatedColliders;
+	rotatedColliders = nullptr;
+}
+
 SDL_Rect* Collider::getColliderRect() {
 	return &colliderRect;
 }

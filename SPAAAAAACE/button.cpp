@@ -9,6 +9,10 @@ Button::Button(int x, int y) {
 	position = { x, y };
 }
 
+Button::~Button() {
+	position = { 0, 0 };
+}
+
 void Button::setPosition(int x, int y) {
 	position = { x, y };
 }
@@ -25,8 +29,12 @@ TextButton::TextButton() {
 	text = nullptr;
 }
 
-TextButton::TextButton(int x, int y, Text * text): Button(x, y) {
+TextButton::TextButton(int x, int y, shared_ptr<Text> text): Button(x, y) {
 	this->text = text;
+}
+
+TextButton::~TextButton() {
+	text.reset();
 }
 
 void TextButton::render() {

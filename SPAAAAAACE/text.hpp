@@ -14,13 +14,13 @@ class Text {
 	SDL_Point position;
 	shared_ptr<Texture> textTexture;
 	SDL_Color textColor;
-	Font* font;
+	shared_ptr<Font> font;
 	public:
 		Text();
-		Text(string text, Font* font);
-		Text(string text, Font* font, int x, int y);
+		Text(string text, shared_ptr<Font> font);
+		Text(string text, shared_ptr<Font> font, int x, int y);
 		Text(const Text &obj);
-		~Text() {}
+		~Text();
 		Text operator=(const Text& obj);
 		void setPosition(int x, int y);
 		int getX();
@@ -30,8 +30,8 @@ class Text {
 		void render();
 		void setColor(SDL_Color);
 		SDL_Color getColor();
-		void setFont(Font* font);
-		Font* getFont();
+		void setFont(shared_ptr<Font> font);
+		shared_ptr<Font> getFont();
 		int getTextWidth();
 		int getTextHeight();
 		shared_ptr<Texture> getTextTexture();

@@ -4,7 +4,7 @@
 
 class Level {
 	int levelWidth, levelHeight;
-	Texture levelTexture;
+	Texture* levelTexture;
 	public:
 		Level(int width, int height);
 		void render();

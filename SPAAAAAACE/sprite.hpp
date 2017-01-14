@@ -28,6 +28,7 @@ class Sprite {
 		Sprite(string path);
 		Sprite(Texture texture);
 		Sprite(Text text);
+		~Sprite();
 		void render(Camera* cam = nullptr, Level* l = nullptr);
 		void rotate(int x1, int y1);
 		void rotate(int x1, int y1, int x2, int y2);
@@ -59,7 +60,6 @@ class Ship : public Sprite {
 };
 
 class Player : public Ship {
-	Camera* cam;
 	Timer hitTimer, regenerateTimer;
 	public:
 		static const SDL_Color color;
