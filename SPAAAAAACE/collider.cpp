@@ -95,17 +95,21 @@ bool checkCollision(Circle* a, SDL_Rect* b, int distanceX, int distanceY) {
 
 	if (distance({ cX, cY }, { a->x, a->y }) < a->r)
 		return true;
-	else if (distance({ cX - (distanceX + b->w), cY }, { a->x, a->y }) < a->r)
+	else if (distance({ cX - (distanceX - b->w), cY }, { a->x, a->y }) < a->r)
 		return true;
-	else if (distance({ cX, (cY - distanceY + b->h) }, { a->x, a->y }) < a->r)
+	else if (distance({ cX, cY - (distanceY - b->h) }, { a->x, a->y }) < a->r)
 		return true;
-	else if (distance({ cX - (distanceX + b->w), cY - (distanceY + b->h) }, { a->x, a->y }) < a->r)
+	else if (distance({ cX - (distanceX - b->w), cY - (distanceY - b->h) }, { a->x, a->y }) < a->r)
 		return true;
 	else if (distance({ cX + (distanceX - b->w), cY }, { a->x, a->y }) < a->r)
 		return true;
 	else if (distance({ cX, cY + (distanceY - b->h) }, { a->x, a->y }) < a->r)
 		return true;
 	else if (distance({ cX + (distanceX - b->w), cY + (distanceY - b->h) }, { a->x, a->y }) < a->r)
+		return true;
+	else if (distance({ cX + (distanceX - b->w), cY - (distanceY - b->h) }, { a->x, a->y }) < a->r)
+		return true;
+	else if (distance({ cX - (distanceX - b->w), cY + (distanceY - b->h) }, { a->x, a->y }) < a->r)
 		return true;
 	return false;
 }

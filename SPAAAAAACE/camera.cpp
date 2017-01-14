@@ -25,3 +25,11 @@ int Camera::getX() {
 int Camera::getY() {
 	return cameraRect.y;
 }
+
+int Camera::getWidth() {
+	return cameraRect.w;
+}
+
+int Camera::getHeight() {
+	return cameraRect.h;
+}

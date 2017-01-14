@@ -14,4 +14,6 @@ public:
 	SDL_Rect* getRect();
 	int getX();
 	int getY();
+	int getWidth();
+	int getHeight();
 };
