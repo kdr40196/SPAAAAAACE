@@ -10,7 +10,6 @@ Camera::Camera() {
 void Camera::move(Player* player, Level* l) {
 	cameraRect.x = (player->getX() + Ship::SHIP_WIDTH / 2) - gScreenWidth / 2;
 	cameraRect.y = (player->getY() + Ship::SHIP_HEIGHT / 2) - gScreenHeight/ 2;
-	//cout << cameraRect.x << ", " << cameraRect.y << endl;
 }
 
 

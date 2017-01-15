@@ -1,5 +1,6 @@
 #pragma once
 #include"collider.hpp"
+#include"g.hpp"
 #include<cmath>
 
 int distance(SDL_Point a, SDL_Point b) {
@@ -35,20 +36,20 @@ bool checkCollisionSAT(SDL_Point* a, SDL_Point* b) {
 			int iPoints2 = (iPoints + 1) % 4;
 			SDL_Point p1 = currentShape[iPoints], p2 = currentShape[iPoints2];
 			SDL_Point normal = { p2.y - p1.y, p1.x - p2.x };
-			int minA = -9999, maxA = -9999;
+			int minA = MINUS_INFINITY, maxA = MINUS_INFINITY;
 			for (int jPoints = 0; jPoints < 4; jPoints++) {
 				int projected = normal.x * a[jPoints].x + normal.y * a[jPoints].y;
-				if (minA == -9999 || projected < minA)
+				if (minA == MINUS_INFINITY || projected < minA)
 					minA = projected;
-				if (maxA == -9999 || projected > maxA)
+				if (maxA == MINUS_INFINITY || projected > maxA)
 					maxA = projected;
 			}
-			int minB = -9999, maxB = -9999;
+			int minB = MINUS_INFINITY, maxB = MINUS_INFINITY;
 			for (int jPoints = 0; jPoints < 4; jPoints++) {
 				int projected = normal.x * b[jPoints].x + normal.y * b[jPoints].y;
-				if (minB == -9999 || projected < minB)
+				if (minB == MINUS_INFINITY || projected < minB)
 					minB = projected;
-				if (maxB == -9999 || projected > maxB)
+				if (maxB == MINUS_INFINITY || projected > maxB)
 					maxB = projected;
 			}
 			if (maxA < minB || minA > maxB)

@@ -8,30 +8,30 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Sprite" Collapsed="true">
-    <Position X="7.5" Y="0.5" Width="1.75" />
+    <Position X="8.25" Y="1.25" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAQAQRAQIAAAAAAAAgAQAAAAEGBQAAA=</HashCode>
+      <HashCode>QAAAAAAAAAAAAAQAQRAQIAAAAAAAQgAQAAAAEGBQAAI=</HashCode>
       <FileName>sprite.hpp</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Ship" Collapsed="true">
-    <Position X="6.5" Y="2" Width="1.75" />
+    <Position X="7.25" Y="2.75" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AIAAAAEAAAAAAAiAAAAgAAAAAQCBBAiAIAAAAAAAAQg=</HashCode>
       <FileName>sprite.hpp</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Player" Collapsed="true">
-    <Position X="6.25" Y="3.5" Width="1.5" />
+    <Position X="7.25" Y="4.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>CIABBAAIAAAAAQCAAIAAQAAAIAgAAACAAAAAAQAEIAA=</HashCode>
+      <HashCode>CIABAAAIAAAAAQCAAIAAQAAAIAgAAACAAAAAAQAEIAA=</HashCode>
       <FileName>sprite.hpp</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Enemy" Collapsed="true">
-    <Position X="8" Y="3.5" Width="1.5" />
+    <Position X="9.25" Y="4.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>SgAkBgAIACACAACCAAAAAAARIAEgAASEAAIBAgAEIgA=</HashCode>
+      <HashCode>SgAkBgAIACACAACCAAAQAAARIAEgAASEAAIBAgAEIgA=</HashCode>
       <FileName>sprite.hpp</FileName>
     </TypeIdentifier>
   </Class>
@@ -59,12 +59,12 @@
   <Class Name="Camera" Collapsed="true">
     <Position X="0.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAACAAAAACAAAACAAAAAAAAAAAAAAAAQAAAAAGAAAAA=</HashCode>
+      <HashCode>QAACAAAAACAAAACAAAAAAAAAAAAAQAAQAAAAAGAAAAA=</HashCode>
       <FileName>camera.hpp</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Laser" Collapsed="true">
-    <Position X="8.75" Y="2" Width="1.5" />
+    <Position X="9.5" Y="2.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AIAAEAAAAAAAAACgAAgAAAQAAAAAAAAEoABCAAAAAQA=</HashCode>
       <FileName>sprite.hpp</FileName>
@@ -73,7 +73,7 @@
   <Class Name="Font" Collapsed="true">
     <Position X="0.5" Y="1.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAIAAgAAAAAAAAAAAIAAAAAAAAAAgAAIAAAAAAACAAE=</HashCode>
+      <HashCode>AAIAAgAAAAAAAAAAAIAAAAAAAAAAgAAIAAAgAAACAAE=</HashCode>
       <FileName>font.hpp</FileName>
     </TypeIdentifier>
   </Class>
@@ -87,44 +87,65 @@
   <Class Name="Menu" Collapsed="true">
     <Position X="0.5" Y="2.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AIAAAEAAQAAAAFCAAAgAAAAAAAEIAAAAgEAAACAAAAA=</HashCode>
+      <HashCode>EIAAAEAAQAAAAFCAAAgAAAAAAAEIAAAAwEAAACAAAAA=</HashCode>
       <FileName>menu.hpp</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Button" Collapsed="true">
-    <Position X="2.25" Y="1.25" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AEAAAAAAAAAAAAAAAAAAIAACAAAAAAAAAAAAAGAQAAA=</HashCode>
-      <FileName>Button.hpp</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="Collider" Collapsed="true">
-    <Position X="4.25" Y="3.5" Width="1.5" />
+    <Position X="4.5" Y="2.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAEAAAIACAACAAAAQEAAAAAABgAAQAABAEABAAAA=</HashCode>
+      <HashCode>AAAAAEAAAIACAACAABAQEAAAAAABgEAQAABAEARACAA=</HashCode>
       <FileName>collider.hpp</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="ShipCollider" Collapsed="true">
-    <Position X="5.75" Y="4.75" Width="1.5" />
+    <Position X="5.5" Y="4" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAA=</HashCode>
       <FileName>collider.hpp</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="LaserCollider" Collapsed="true">
-    <Position X="4" Y="4.75" Width="1.5" />
+    <Position X="3.5" Y="4" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAA=</HashCode>
       <FileName>collider.hpp</FileName>
     </TypeIdentifier>
   </Class>
+  <Class Name="Button" Collapsed="true">
+    <Position X="2.25" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAAAAAAAAAAAAIAACAAAAAAAAAAAAAGEQAAA=</HashCode>
+      <FileName>Button.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TextButton" Collapsed="true">
+    <Position X="2.25" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAAACgAAAAAAABAAAACCAAAAQAAIAAAAAAAQAAA=</HashCode>
+      <FileName>Button.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
   <Struct Name="Circle" Collapsed="true">
-    <Position X="9.5" Y="0.5" Width="1.5" />
+    <Position X="4.5" Y="2" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABhAAAAAAA=</HashCode>
       <FileName>collider.hpp</FileName>
     </TypeIdentifier>
   </Struct>
+  <Enum Name="ShipType" Collapsed="true">
+    <Position X="9.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAACAAA=</HashCode>
+      <FileName>sprite.hpp</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="EnemyState" Collapsed="true">
+    <Position X="7.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAECAAAAAAAAAAAAAAAAAAAAAAIAQAAAAAAAAAAAAA=</HashCode>
+      <FileName>sprite.hpp</FileName>
+    </TypeIdentifier>
+  </Enum>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>

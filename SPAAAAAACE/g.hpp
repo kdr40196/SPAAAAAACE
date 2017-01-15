@@ -5,6 +5,8 @@
 #include"window.hpp"
 #include"sprite.hpp"
 
+#define MINUS_INFINITY -9999
+
 class Font;
 class Texture;
 class Enemy;

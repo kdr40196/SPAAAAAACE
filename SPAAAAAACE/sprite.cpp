@@ -186,7 +186,7 @@ void Laser::move(float timestep, Level* l, Player* player) {
 	}
 
 	if (dead) {
-		position = { -9999, -9999 };
+		position = { MINUS_INFINITY, MINUS_INFINITY };
 		return;
 	}
 	else {
@@ -214,7 +214,7 @@ void Laser::move(float timestep, Level* l, Player* player) {
 		for (int i = 0; i < TOTAL_ENEMIES; i++) {
 			if (collider->collides(gEnemies[i]->getCollider())) {
 				gEnemies[i]->takeDamage();
-				position.x = position.y = -9999;
+				position.x = position.y = MINUS_INFINITY;
 				break;
 			}
 		}
@@ -222,7 +222,7 @@ void Laser::move(float timestep, Level* l, Player* player) {
 	else {
 		if (collider->collides(player->getCollider())) {
 			player->takeDamage();
-			position.x = position.y = -9999;
+			position.x = position.y = MINUS_INFINITY;
 		}
 	}
 }
