@@ -81,18 +81,27 @@ string Menu::handleInput(SDL_Event& e) {
 	else if (e.type == SDL_MOUSEMOTION) {
 		int x, y;
 		SDL_GetMouseState(&x, &y);
+		
+		x /= (float(gWindow.getWidth()) / gScreenWidth);
+		y /= (float(gWindow.getHeight()) / gScreenHeight);
+		
 		for (int i = 0; i < noOfItems; i++) {
-			if (x >= items[i].getX() && x <= items[i].getX() + items[i].getWidth() && y >= items[i].getY() && y <= items[i].getY() + items[i].getHeight()) {
+			if (x >= items[i].getX() && x <= items[i].getX() + items[i].getWidth()
+				&& y >= items[i].getY()	&& y <= items[i].getY() + items[i].getHeight()) {
 				currentIndex = i;
 				break;
 			}
 		}
+		
 	}
 	else if (e.type == SDL_MOUSEBUTTONDOWN) {
 		int x, y;
 		SDL_GetMouseState(&x, &y);
+		x /= (float(gWindow.getWidth()) / gScreenWidth);
+		y /= (float(gWindow.getHeight()) / gScreenHeight);
 		for (int i = 0; i < noOfItems; i++) {
-			if (x >= items[i].getX() && x <= items[i].getX() + items[i].getWidth() && y >= items[i].getY() && y <= items[i].getY() + items[i].getHeight()) {
+			if (x >= items[i].getX() && x <= items[i].getX() + items[i].getWidth()
+				&& y >= items[i].getY() && y <= items[i].getY() + items[i].getHeight()) {
 				currentIndex = i;
 				action = items[currentIndex].getButtonText();
 				currentIndex = 0;

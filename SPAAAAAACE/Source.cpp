@@ -17,8 +17,12 @@ int main(int argc, char** argv) {
 
 		while (SDL_PollEvent(&e)) {
 			if (e.type == SDL_WINDOWEVENT) gWindow.handleEvent(e);
+			else if (e.type == SDL_KEYDOWN) {
+				if (e.key.keysym.sym == SDLK_F4)
+					gWindow.toggleFullScreen();
+			}
 			else if (e.type == SDL_QUIT) quit = true;
-			else action = mainMenu.handleInput(e);
+			action = mainMenu.handleInput(e);
 		}
 
 		if (action == "EXIT") {
@@ -75,6 +79,11 @@ int main(int argc, char** argv) {
 						paused = true;
 						pause(player);
 					}
+					break;
+
+				case SDLK_F4:
+					gWindow.toggleFullScreen();
+						
 					break;
 				}
 			}

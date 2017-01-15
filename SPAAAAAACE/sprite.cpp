@@ -134,13 +134,13 @@ Laser::Laser(int start_x, int start_y, int x, int y, int angle, Level* l, bool p
 	texture = gSpriteSheet;
 	clipRect = { 31, 56, LASER_WIDTH, LASER_HEIGHT };
 
-	start = { start_x, start_y };
-	position = { start_x, start_y };
+	start = { start_x - LASER_WIDTH / 2, start_y };
+	position = { start_x - LASER_WIDTH / 2, start_y};
 	click = { x, y };
 
 	width = LASER_WIDTH, height = LASER_HEIGHT;
 	this->angle = angle;
-	collider = new LaserCollider(start_x, start_y, LASER_WIDTH, LASER_HEIGHT, angle);
+	collider = new LaserCollider(position.x, position.y, LASER_WIDTH, LASER_HEIGHT, angle);
 
 	xVel = sin(angle*M_PI/180) * LASER_VEL;
 	yVel = -cos(angle*M_PI/180) * LASER_VEL;
@@ -374,6 +374,8 @@ void Player::handleInput(SDL_Event& e, Level* l) {
 	if (e.type == SDL_MOUSEMOTION) {
 		int x, y;
 		SDL_GetMouseState(&x, &y);
+		x /= (float(gWindow.getWidth()) / gScreenWidth);
+		y /= (float(gWindow.getHeight()) / gScreenHeight);
 		rotate(x, y, gScreenWidth / 2, gScreenHeight / 2);
 	}
 
@@ -403,6 +405,8 @@ bool Player::update(float timeStep, Level * l) {
 void Player::move(float timeStep, Level *l) {
 	int x, y;
 	SDL_GetMouseState(&x, &y);
+	x /= (float(gWindow.getWidth()) / gScreenWidth);
+	y /= (float(gWindow.getHeight()) / gScreenHeight);
 	rotate(x, y, gScreenWidth / 2, gScreenHeight / 2);
 	for (int iEnemies = 0; iEnemies < TOTAL_ENEMIES; iEnemies++) {
 		if (collider->collides(gEnemies[iEnemies]->getCollider())) {

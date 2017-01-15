@@ -4,7 +4,7 @@
 class Window {
 	SDL_Window* window;
 	int width, height;
-	bool minimized;
+	bool minimized, fullScreen;
 	public:
 		Window();
 		~Window();
@@ -13,8 +13,10 @@ class Window {
 		SDL_Renderer* createRenderer();
 		void handleEvent(SDL_Event& e);
 		void free();
+		void toggleFullScreen();
 		int getWidth();
 		int getHeight();
 		bool isMinimized();
+		bool isFullScreen();
 };
 
