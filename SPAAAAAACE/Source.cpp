@@ -116,19 +116,19 @@ int main(int argc, char** argv) {
 			}
 
 			if (!paused && !gameOver)
-				player->handleInput(e, level);
+				player->handleInput(e, *level);
 		}
 		
 		float timeStep = stepTimer.getTicks() / 1000.f;
 		
 		if (!paused && !gameOver) {
 			for (int i = 0; i < gLasers.size(); i++) {
-				gLasers[i].move(timeStep, level, player);
+				gLasers[i].move(timeStep, *level, *player);
 			}
 			updateLasers();
 			updateEnemies(timeStep, level, player, cam);
 			
-			gameOver = !player->update(timeStep, level);
+			gameOver = !player->update(timeStep, *level);
 			cam->move(player, level);
 		}
 		

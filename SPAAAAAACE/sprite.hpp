@@ -51,8 +51,8 @@ class Ship : public Sprite {
 		static const int SHIP_WIDTH = 64, SHIP_HEIGHT = 28;
 		Ship();
 		Ship(string path);
-		void move(float timeStep, Level* level);
-		void attack(int x, int y, Level* level);
+		void move(float timeStep, Level& level);
+		void attack(int x, int y, Level& level);
 		void takeDamage();
 		int getHealth();
 		bool isDamaged();
@@ -69,10 +69,10 @@ class Player : public Ship {
 		static const int REGENERATE_RATE = 1, REGENERATE_TIMEOUT = 500, REGENERATE_AFTER = 3000;
 		
 		Player();
-		Player(Level*);
-		void handleInput(SDL_Event& e, Level* level);
-		bool update(float timeStep, Level* level);
-		void move(float timeStep, Level* level);
+		Player(Level&);
+		void handleInput(SDL_Event& e, Level& level);
+		bool update(float timeStep, Level& level);
+		void move(float timeStep, Level& level);
 		void takeDamage();
 		void regenerate();
 		void pause();
@@ -92,16 +92,16 @@ class Enemy :public Ship {
 	public:
 		static const SDL_Color color;
 		Enemy();
-		Enemy(Level*, Player*);
+		Enemy(Level&, Player&);
 		int getId();
-		void update(float timeStep, Level* level, Player* player);
-		void move(float timeStep, Level* level, Player* player);
-		void attack(Player* player, Level* level);
-		void rotate(int x, int y, Level* level);
-		void spawn(Level*, Camera*);
+		void update(float timeStep, Level& level, Player& player);
+		void move(float timeStep, Level& level, Player& player);
+		void attack(Player& player, Level& level);
+		void rotate(int x, int y, Level& level);
+		void spawn(Level&, Camera&);
 		void takeDamage();
 		void die();
-		void respawn(Level*, Camera*);
+		void respawn(Level&, Camera&);
 		void upgrade();
 		EnemyState getState();
 		void pause();
@@ -115,7 +115,7 @@ class Laser : public Sprite {
 	bool playerStarted;
 	public:
 		static const int LASER_VEL = 1000, RANGE = 1000, LASER_WIDTH = 2, LASER_HEIGHT = 28;
-		Laser(int start_x, int start_y, int x, int y, int angle, Level* l, bool playerStarted);
+		Laser(int start_x, int start_y, int x, int y, int angle, Level& l, bool playerStarted);
 		~Laser();
-		void move(float timestep, Level* l, Player* player);
+		void move(float timestep, Level& l, Player& player);
 };

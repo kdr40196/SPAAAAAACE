@@ -106,7 +106,7 @@ void start(Level** level, Player** player, Camera** cam) {
 		delete *cam;
 	}
 	*level = new Level(3000, 3000);
-	*player = new Player(*level);
+	*player = new Player(**level);
 	*cam = new Camera();
 
 	gSpawnedEnemies = 0;
@@ -119,8 +119,8 @@ void start(Level** level, Player** player, Camera** cam) {
 	}
 	gEnemies = new Enemy*[TOTAL_ENEMIES];
 	for (int i = 0; i < TOTAL_ENEMIES; i++) {
-		gEnemies[i] = new Enemy(*level, *player);
-		gEnemies[i]->spawn(*level, *cam);
+		gEnemies[i] = new Enemy(**level, **player);
+		gEnemies[i]->spawn(**level, **cam);
 	}
 
 	gScore = 0;
@@ -158,9 +158,9 @@ void updateEnemies(float timeStep, Level* level, Player* player, Camera* cam) {
 	for (int i = 0; i < TOTAL_ENEMIES; i++) {
 		if (gEnemies[i]->getHealth() <= 0) {
 			gEnemies[i]->die();
-			gEnemies[i]->respawn(level, cam);
+			gEnemies[i]->respawn(*level, *cam);
 		}
-		gEnemies[i]->update(timeStep, level, player);
+		gEnemies[i]->update(timeStep, *level, *player);
 	}
 }
 

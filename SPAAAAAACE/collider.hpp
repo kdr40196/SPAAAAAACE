@@ -37,6 +37,7 @@ class LaserCollider : public Collider {
 
 struct Circle { int x, y, r; };
 
+bool checkCollisionSAT(SDL_Point* a, SDL_Point* b);
 bool checkCollision(SDL_Rect* a, SDL_Rect* b);
 bool checkCollision(Circle* a, SDL_Rect* b);
 bool checkCollision(Circle* a, SDL_Rect* b, int distanceX, int distanceY);

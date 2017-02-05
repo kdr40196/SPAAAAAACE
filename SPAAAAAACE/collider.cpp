@@ -35,7 +35,7 @@ bool checkCollisionSAT(SDL_Point* a, SDL_Point* b) {
 		for (int iPoints = 0; iPoints < 4; iPoints++) {
 			int iPoints2 = (iPoints + 1) % 4;
 			SDL_Point p1 = currentShape[iPoints], p2 = currentShape[iPoints2];
-			SDL_Point normal = { p2.y - p1.y, p1.x - p2.x };
+			SDL_Point normal = { p1.y - p2.y, p1.x - p2.x };
 			int minA = MINUS_INFINITY, maxA = MINUS_INFINITY;
 			for (int jPoints = 0; jPoints < 4; jPoints++) {
 				int projected = normal.x * a[jPoints].x + normal.y * a[jPoints].y;
