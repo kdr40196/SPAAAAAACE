@@ -8,6 +8,8 @@
 #include<SDL_image.h>
 #include<SDL_ttf.h>
 #include"sprite.hpp"
+#include"ship.hpp"
+#include"laser.hpp"
 #include"texture.hpp"
 #include"timer.hpp"
 #include"window.hpp"

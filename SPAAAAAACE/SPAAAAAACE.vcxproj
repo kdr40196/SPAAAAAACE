@@ -142,8 +142,10 @@
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="collider.cpp" />
+    <ClCompile Include="laser.cpp" />
     <ClCompile Include="level.cpp" />
     <ClCompile Include="menu.cpp" />
+    <ClCompile Include="ship.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="space.cpp" />
     <ClCompile Include="sprite.cpp" />
@@ -158,8 +160,10 @@
     <ClInclude Include="camera.hpp" />
     <ClInclude Include="collider.hpp" />
     <ClInclude Include="g.hpp" />
+    <ClInclude Include="laser.hpp" />
     <ClInclude Include="level.hpp" />
     <ClInclude Include="menu.hpp" />
+    <ClInclude Include="ship.hpp" />
     <ClInclude Include="space.hpp" />
     <ClInclude Include="sprite.hpp" />
     <ClInclude Include="font.hpp" />

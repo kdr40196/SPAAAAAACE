@@ -10,6 +10,7 @@
 class Font;
 class Texture;
 class Enemy;
+class Laser;
 
 const int FPS = 60;
 const float TICKS_PER_FRAME = 1000.f / FPS;

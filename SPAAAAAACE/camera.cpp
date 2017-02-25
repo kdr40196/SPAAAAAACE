@@ -2,6 +2,7 @@
 
 #include"camera.hpp"
 #include"sprite.hpp"
+#include"ship.hpp"
 
 Camera::Camera() {
 	cameraRect = { 0, 0, gScreenWidth, gScreenHeight };
