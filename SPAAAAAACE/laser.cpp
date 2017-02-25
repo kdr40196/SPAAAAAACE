@@ -1,5 +1,6 @@
 #include"laser.hpp"
-#include"ship.hpp"
+#include"player.hpp"
+#include"enemy.hpp"
 #include"g.hpp"
 #include"level.hpp"
 

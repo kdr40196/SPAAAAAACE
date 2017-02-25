@@ -9,6 +9,8 @@
 #include<SDL_ttf.h>
 #include"sprite.hpp"
 #include"ship.hpp"
+#include"player.hpp"
+#include"enemy.hpp"
 #include"laser.hpp"
 #include"texture.hpp"
 #include"timer.hpp"
