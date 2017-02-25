@@ -153,6 +153,7 @@
     <ClCompile Include="sprite.cpp" />
     <ClCompile Include="font.cpp" />
     <ClCompile Include="text.cpp" />
+    <ClCompile Include="TextButton.cpp" />
     <ClCompile Include="texture.cpp" />
     <ClCompile Include="timer.cpp" />
     <ClCompile Include="window.cpp" />
@@ -172,6 +173,7 @@
     <ClInclude Include="sprite.hpp" />
     <ClInclude Include="font.hpp" />
     <ClInclude Include="text.hpp" />
+    <ClInclude Include="TextButton.hpp" />
     <ClInclude Include="texture.hpp" />
     <ClInclude Include="timer.hpp" />
     <ClInclude Include="window.hpp" />

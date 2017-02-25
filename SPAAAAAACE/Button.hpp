@@ -3,6 +3,7 @@
 #include<iostream>
 #include<memory>
 #include<SDL.h>
+#include "text.hpp"
 using namespace std;
 
 class Text;
@@ -20,16 +21,3 @@ class Button {
 		virtual void render() = 0;
 };
 
-class TextButton: public Button {
-	shared_ptr<Text> text;
-	public:
-		TextButton();
-		TextButton(int x, int y, shared_ptr<Text> text);
-		~TextButton();
-		void render();
-		string getButtonText();
-		void setText(string text);
-		void setPosition(int x, int y);
-		int getWidth();
-		int getHeight();
-};

@@ -3,7 +3,7 @@
 #include<vector>
 #include<memory>
 #include"text.hpp"
-#include"button.hpp"
+#include"TextButton.hpp"
 using namespace std;
 
 

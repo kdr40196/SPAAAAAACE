@@ -23,6 +23,7 @@
 #include"text.hpp"
 #include"menu.hpp"
 #include"button.hpp"
+#include"TextButton.hpp"
 
 using namespace std;
 
