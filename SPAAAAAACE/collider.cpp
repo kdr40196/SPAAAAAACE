@@ -94,24 +94,15 @@ bool checkCollision(Circle* a, SDL_Rect* b, int distanceX, int distanceY) {
 		cY = b->y + b->h;
 	else cY = a->y;
 
-	if (distance({ cX, cY }, { a->x, a->y }) < a->r)
-		return true;
-	else if (distance({ cX - (distanceX - b->w), cY }, { a->x, a->y }) < a->r)
-		return true;
-	else if (distance({ cX, cY - (distanceY - b->h) }, { a->x, a->y }) < a->r)
-		return true;
-	else if (distance({ cX - (distanceX - b->w), cY - (distanceY - b->h) }, { a->x, a->y }) < a->r)
-		return true;
-	else if (distance({ cX + (distanceX - b->w), cY }, { a->x, a->y }) < a->r)
-		return true;
-	else if (distance({ cX, cY + (distanceY - b->h) }, { a->x, a->y }) < a->r)
-		return true;
-	else if (distance({ cX + (distanceX - b->w), cY + (distanceY - b->h) }, { a->x, a->y }) < a->r)
-		return true;
-	else if (distance({ cX + (distanceX - b->w), cY - (distanceY - b->h) }, { a->x, a->y }) < a->r)
-		return true;
-	else if (distance({ cX - (distanceX - b->w), cY + (distanceY - b->h) }, { a->x, a->y }) < a->r)
-		return true;
+	int iCheck = distanceX - b->w, jCheck = distanceY - b->h;
+
+	for (int i = -iCheck; i <= iCheck; i += iCheck) {
+		for (int j = -jCheck; j <= jCheck; j += jCheck) {
+			if (distance({ cX + i, cY + j}, { a->x, a->y }) < a->r)
+				return true;
+		}
+	}
+
 	return false;
 }
 
@@ -119,7 +110,7 @@ Collider::Collider() {
 	colliderRect = { 0, 0, 0, 0 };
 	rotatedColliderRect[0] = { colliderRect.x, colliderRect.y };
 	rotatedColliderRect[1] = { colliderRect.x + colliderRect.w, colliderRect.y };
-	rotatedColliderRect[2] = { colliderRect.x + colliderRect.w, colliderRect.y  + colliderRect.h};
+	rotatedColliderRect[2] = { colliderRect.x + colliderRect.w, colliderRect.y + colliderRect.h };
 	rotatedColliderRect[3] = { colliderRect.x, colliderRect.y + colliderRect.h };
 	angle = 0;
 	noOfColliders = 0;

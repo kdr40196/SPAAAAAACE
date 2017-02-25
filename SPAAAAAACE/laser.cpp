@@ -35,32 +35,16 @@ void Laser::move(float timestep, Level& l, Player& player) {
 
 
 	bool dead = true;
-	if (distance(start, position) < RANGE) {
-		dead = false;
-	}
-	else if (distance(start, { position.x - l.getWidth(), position.y }) < RANGE) {
-		dead = false;
-	}
-	else if (distance(start, { position.x + l.getWidth(), position.y }) < RANGE) {
-		dead = false;
-	}
-	else if (distance(start, { position.x, position.y - l.getHeight() }) < RANGE) {
-		dead = false;
-	}
-	else if (distance(start, { position.x, position.y + l.getHeight() }) < RANGE) {
-		dead = false;
-	}
-	else if (distance(start, { position.x - l.getWidth(), position.y - l.getHeight() }) < RANGE) {
-		dead = false;
-	}
-	else if (distance(start, { position.x + l.getWidth(), position.y + l.getHeight() }) < RANGE) {
-		dead = false;
-	}
-	else if (distance(start, { position.x + l.getWidth(), position.y - l.getHeight() }) < RANGE) {
-		dead = false;
-	}
-	else if (distance(start, { position.x - l.getWidth(), position.y + l.getHeight() }) < RANGE) {
-		dead = false;
+
+	int w = l.getWidth(), h = l.getHeight();
+
+	for (int i = -w; i <= w; i += w) {
+		for (int j = -h; j <= h; j += h) {
+			if (distance(start, { position.x + i, position.y + j }) < RANGE) {
+				dead = false;
+				break;
+			}
+		}
 	}
 
 	if (dead) {

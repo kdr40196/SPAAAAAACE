@@ -97,58 +97,24 @@ void Enemy::attack(Player& player, Level& l) {
 }
 
 void Enemy::rotate(int x, int y, Level& level) {
-	int x1 = x, y1 = y;
-	int minDistance = distance(position, { x, y });
-	int tempDistance = distance(position, { x - level.getWidth(), y });
-	if (tempDistance < minDistance) {
-		x1 = x - level.getWidth();
-		y1 = y;
-		minDistance = tempDistance;
-	}
-	tempDistance = distance(position, { x + level.getWidth(), y });
-	if (tempDistance < minDistance) {
-		x1 = x + level.getWidth();
-		y1 = y;
-		minDistance = tempDistance;
-	}
-	tempDistance = distance(position, { x, y - level.getHeight() });
-	if (tempDistance < minDistance) {
-		x1 = x;
-		y1 = y - level.getHeight();
-		minDistance = tempDistance;
-	}
-	tempDistance = distance(position, { x, y + level.getHeight() });
-	if (tempDistance < minDistance) {
-		x1 = x;
-		y1 = y + level.getHeight();
-		minDistance = tempDistance;
-	}
-	tempDistance = distance(position, { x - level.getWidth(), y - level.getHeight() });
-	if (tempDistance < minDistance) {
-		x1 = x - level.getWidth();
-		y1 = y - level.getHeight();
-		minDistance = tempDistance;
-	}
-	tempDistance = distance(position, { x + level.getWidth(), y + level.getHeight() });
-	if (tempDistance< minDistance) {
-		x1 = x + level.getWidth();
-		y1 = y + level.getHeight();
-		minDistance = tempDistance;
-	}
-	tempDistance = distance(position, { x + level.getWidth(), y - level.getHeight() });
-	if (tempDistance< minDistance) {
-		x1 = x + level.getWidth();
-		y1 = y - level.getHeight();
-		minDistance = tempDistance;
-	}
-	tempDistance = distance(position, { x - level.getWidth(), y + level.getHeight() });
-	if (tempDistance< minDistance) {
-		x1 = x - level.getWidth();
-		y1 = y + level.getHeight();
-		minDistance = tempDistance;
+	int xMin = x, yMin = y;
+	int minDistance = distance(position, { x, y }), tempDistance;
+
+	int w = level.getWidth(), h = level.getHeight();
+
+	for (int i = -w; i <= w; i += w) {
+		for (int j = -h; j <= h; j += h) {
+			if (i == j) continue;
+			tempDistance = distance(position, { x + i, y + j });
+			if (tempDistance < minDistance) {
+				xMin = x + i;
+				yMin = y + j;
+				minDistance = tempDistance;
+			}
+		}
 	}
 
-	Sprite::rotate(x1, y1);
+	Sprite::rotate(xMin, yMin);
 }
 
 void Enemy::update(float timeStep, Level& level, Player& player) {
