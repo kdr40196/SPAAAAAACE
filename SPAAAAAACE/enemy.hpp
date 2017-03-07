@@ -2,7 +2,7 @@
 
 #include"ship.hpp"
 
-enum class EnemyState { IDLE, ATTACKING, RETURNING_TO_IDLE, COOLDOWN };
+enum class EnemyState { IDLE, ATTACKING, COOLDOWN };
 
 class Enemy :public Ship {
 	int id, originalAngle;

@@ -121,7 +121,7 @@ void Enemy::update(float timeStep, Level& level, Player& player) {
 
 	//check if player detected
 	if (checkCollision(&attackRadar, player.getCollider()->getColliderRect(), level.getWidth(), level.getHeight())) {
-		if (state == EnemyState::IDLE || state == EnemyState::RETURNING_TO_IDLE)
+		if (state == EnemyState::IDLE)
 			originalAngle = angle;
 
 		rotate(player.getX() + SHIP_WIDTH / 2, player.getY() + SHIP_HEIGHT / 2, level);
@@ -137,14 +137,10 @@ void Enemy::update(float timeStep, Level& level, Player& player) {
 		else if (state == EnemyState::COOLDOWN) {
 			rotate(player.getX() + SHIP_WIDTH / 2, player.getY() + SHIP_HEIGHT / 2, level);
 			if (cooldownTimer.getTicks() >= COOLDOWN_TIME) {
-				state = EnemyState::RETURNING_TO_IDLE;
+				state = EnemyState::IDLE;
 				angle = originalAngle;
 				cooldownTimer.stop();
 			}
-		}
-		else if (state == EnemyState::RETURNING_TO_IDLE) {
-			EnemyState::IDLE;
-			move(timeStep, level, player);
 		}
 		else if (state == EnemyState::IDLE)
 			move(timeStep, level, player);
