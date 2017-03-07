@@ -10,11 +10,6 @@ class Texture;
 class Level;
 class Text;
 
-enum class ShipType { SHIP_TYPE_PLAYER, SHIP_TYPE_ENEMY };
-
-enum class EnemyState { IDLE, ATTACKING, COOLDOWN, RETURNING_TO_IDLE };
-
-
 class Sprite {
 	protected:
 		int width, height;

@@ -7,6 +7,8 @@
 #include"camera.hpp"
 #include<cmath>
 
+enum class ShipType { SHIP_TYPE_PLAYER, SHIP_TYPE_ENEMY };
+
 class Ship : public Sprite {
 protected:
 	int xVel, yVel;
