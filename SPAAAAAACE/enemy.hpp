@@ -8,7 +8,6 @@ class Enemy :public Ship {
 	Circle attackRadar;
 	SDL_Point original;
 	bool playerDetected;
-	//EnemyState state;
 	static int maxHealth;
 	EnemyStateManager* stateManager;
 public:

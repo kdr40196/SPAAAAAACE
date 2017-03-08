@@ -8,10 +8,6 @@ EnemyStateManager::EnemyStateManager() {
 }
 
 EnemyStateManager::EnemyStateManager(Enemy* enemy, Player* player, Level* level) : EnemyStateManager() {
-	/*idleState = new IdleState(this);
-	attackState = new AttackState(this);
-	cooldownState = new CooldownState(this);
-	currentState = idleState;*/
 	this->enemy = enemy;
 	this->player = player;
 	this->level = level;
