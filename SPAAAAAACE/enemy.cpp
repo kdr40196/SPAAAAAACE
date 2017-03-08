@@ -18,11 +18,12 @@ Enemy::Enemy() {
 	health = maxHealth;
 	playerDetected = false;
 	type = ShipType::SHIP_TYPE_ENEMY;
-	state = EnemyState::IDLE;
 
 	attackTimer.start();
 
 	collider = new ShipCollider(position.x, position.y, SHIP_WIDTH, SHIP_HEIGHT, angle);
+
+	stateManager = nullptr;
 }
 
 Enemy::Enemy(Level& l, Player& p) {
@@ -33,13 +34,27 @@ Enemy::Enemy(Level& l, Player& p) {
 	health = maxHealth;
 	playerDetected = false;
 	type = ShipType::SHIP_TYPE_ENEMY;
-	state = EnemyState::IDLE;
+	//state = EnemyState::IDLE;
 	collider = new ShipCollider(position.x, position.y, SHIP_WIDTH, SHIP_HEIGHT, angle);
 	attackTimer.start();
+
+	stateManager = new EnemyStateManager(this, &p, &l);
 }
 
 int Enemy::getId() {
 	return id;
+}
+
+Circle& Enemy::getAttackRadar() {
+	return attackRadar;
+}
+
+float Enemy::getAngle() {
+	return angle;
+}
+
+void Enemy::setAngle(float angle) {
+	this->angle = angle;
 }
 
 void Enemy::move(float timeStep, Level& l, Player& player) {
@@ -118,33 +133,8 @@ void Enemy::rotate(int x, int y, Level& level) {
 }
 
 void Enemy::update(float timeStep, Level& level, Player& player) {
-
-	//check if player detected
-	if (checkCollision(&attackRadar, player.getCollider()->getColliderRect(), level.getWidth(), level.getHeight())) {
-		if (state == EnemyState::IDLE)
-			originalAngle = angle;
-
-		rotate(player.getX() + SHIP_WIDTH / 2, player.getY() + SHIP_HEIGHT / 2, level);
-
-		state = EnemyState::ATTACKING;
-		attack(player, level);
-	}
-	else {
-		if (state == EnemyState::ATTACKING) {
-			cooldownTimer.start();
-			state = EnemyState::COOLDOWN;
-		}
-		else if (state == EnemyState::COOLDOWN) {
-			rotate(player.getX() + SHIP_WIDTH / 2, player.getY() + SHIP_HEIGHT / 2, level);
-			if (cooldownTimer.getTicks() >= COOLDOWN_TIME) {
-				state = EnemyState::IDLE;
-				angle = originalAngle;
-				cooldownTimer.stop();
-			}
-		}
-		else if (state == EnemyState::IDLE)
-			move(timeStep, level, player);
-	}
+	if (stateManager != nullptr)
+		stateManager->update(timeStep);
 }
 
 void Enemy::spawn(Level& level, Camera& cam) {
@@ -214,10 +204,6 @@ void Enemy::respawn(Level& l, Camera& cam) {
 
 void Enemy::upgrade() {
 	health = maxHealth;
-}
-
-EnemyState Enemy::getState() {
-	return state;
 }
 
 void Enemy::pause() {

@@ -8,7 +8,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Sprite" Collapsed="true">
-    <Position X="8.25" Y="1.25" Width="1.75" />
+    <Position X="9.25" Y="1" Width="1.75" />
     <TypeIdentifier>
       <HashCode>QAAAAAAAAAAAAAQAQRAQIAAAAAAAQgAQAAAAEGBQAAI=</HashCode>
       <FileName>sprite.hpp</FileName>
@@ -108,12 +108,12 @@
   <Class Name="Enemy" Collapsed="true">
     <Position X="9.25" Y="4.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>SgAkBgAIACACAACCAAAQAAARIAEgAASEAAIBAgAEIgA=</HashCode>
+      <HashCode>CgAkBkAIBCACAACKAAAQAAARIAEgAASAAAIBAgAEIgA=</HashCode>
       <FileName>enemy.hpp</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Laser" Collapsed="true">
-    <Position X="9.5" Y="2.75" Width="1.5" />
+    <Position X="10" Y="2.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AIAAEAAAAAAAAACgAAgAAAQAAAAAAAAEoABCAAAAAQA=</HashCode>
       <FileName>laser.hpp</FileName>
@@ -126,6 +126,41 @@
       <FileName>TextButton.hpp</FileName>
     </TypeIdentifier>
   </Class>
+  <Class Name="AttackState" Collapsed="true">
+    <Position X="14.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAEAAAAAAAAAAABAAAAAAAAACAIAAAAAAAQgA=</HashCode>
+      <FileName>AttackState.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CooldownState" Collapsed="true">
+    <Position X="16.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAEAAAAAAAAAAABAAAACAAAAAAIAAAAAAAQgA=</HashCode>
+      <FileName>CooldownState.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="EnemyStateManager" Collapsed="true">
+    <Position X="11.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAIAIAAAAAAAAAEAAAABIAADAQAEQAY=</HashCode>
+      <FileName>EnemyStateManager.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="IdleState" Collapsed="true">
+    <Position X="12.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAEAAAAACAAAAABAAAAAAAAAAAIAAABAAAQAA=</HashCode>
+      <FileName>IdleState.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="IEnemyState" Collapsed="true">
+    <Position X="14.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAACAAAAAAAABAAAAAAAAAAAIAAAAAAAQAA=</HashCode>
+      <FileName>IEnemyState.hpp</FileName>
+    </TypeIdentifier>
+  </Class>
   <Struct Name="Circle" Collapsed="true">
     <Position X="4.5" Y="2" Width="1.5" />
     <TypeIdentifier>
@@ -134,17 +169,10 @@
     </TypeIdentifier>
   </Struct>
   <Enum Name="ShipType" Collapsed="true">
-    <Position X="9.25" Y="0.5" Width="1.5" />
+    <Position X="7" Y="1.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAACAAA=</HashCode>
       <FileName>ship.hpp</FileName>
-    </TypeIdentifier>
-  </Enum>
-  <Enum Name="EnemyState" Collapsed="true">
-    <Position X="7.25" Y="0.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAECAAAAAAAAAAAAAAAAAAAAAAIAQAAAAAAAAAAAAA=</HashCode>
-      <FileName>enemy.hpp</FileName>
     </TypeIdentifier>
   </Enum>
   <Font Name="Segoe UI" Size="9" />

@@ -139,10 +139,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AttackState.cpp" />
     <ClCompile Include="Button.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="collider.cpp" />
+    <ClCompile Include="CooldownState.cpp" />
     <ClCompile Include="enemy.cpp" />
+    <ClCompile Include="EnemyStateManager.cpp" />
+    <ClCompile Include="IdleState.cpp" />
     <ClCompile Include="laser.cpp" />
     <ClCompile Include="level.cpp" />
     <ClCompile Include="menu.cpp" />
@@ -159,11 +163,16 @@
     <ClCompile Include="window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AttackState.hpp" />
     <ClInclude Include="Button.hpp" />
     <ClInclude Include="camera.hpp" />
     <ClInclude Include="collider.hpp" />
+    <ClInclude Include="CooldownState.hpp" />
     <ClInclude Include="enemy.hpp" />
+    <ClInclude Include="EnemyStateManager.hpp" />
     <ClInclude Include="g.hpp" />
+    <ClInclude Include="IdleState.hpp" />
+    <ClInclude Include="IEnemyState.hpp" />
     <ClInclude Include="laser.hpp" />
     <ClInclude Include="level.hpp" />
     <ClInclude Include="menu.hpp" />
