@@ -21,7 +21,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{5597CC14-B6C7-475D-A246-4983E4DC37D5}</ProjectGuid>
     <RootNamespace>SPAAAAAACE</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -69,20 +69,20 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>D:\SDL\SDL2_ttf-devel-2.0.14-VC\SDL2_ttf-2.0.14\include;D:\SDL\SDL2_image-devel-2.0.1-VC\SDL2_image-2.0.1\include;D:\SDL\SDL2-devel-2.0.4-VC\SDL2-2.0.4\include;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\SDL\SDL2_ttf-devel-2.0.14-VC\SDL2_ttf-2.0.14\lib\x86;D:\SDL\SDL2_image-devel-2.0.1-VC\SDL2_image-2.0.1\lib\x86;D:\SDL\SDL2-devel-2.0.4-VC\SDL2-2.0.4\lib\x86;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86</LibraryPath>
+    <IncludePath>F:\SDL\SDL2_ttf-2.0.14\include;F:\SDL\SDL2_image-2.0.1\include;F:\SDL\SDL2-2.0.5\include;$(IncludePath)</IncludePath>
+    <LibraryPath>F:\SDL\SDL2_ttf-2.0.14\lib\x86;F:\SDL\SDL2_image-2.0.1\lib\x86;F:\SDL\SDL2-2.0.5\lib\x86;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>D:\SDL\SDL2_image-devel-2.0.1-VC\SDL2_image-2.0.1\include;D:\SDL\SDL2_ttf-devel-2.0.14-VC\SDL2_ttf-2.0.14\include;D:\SDL\SDL2-devel-2.0.4-VC\SDL2-2.0.4\include;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\SDL\SDL2_image-devel-2.0.1-VC\SDL2_image-2.0.1\lib\x64;D:\SDL\SDL2_ttf-devel-2.0.14-VC\SDL2_ttf-2.0.14\lib\x64;D:\SDL\SDL2-devel-2.0.4-VC\SDL2-2.0.4\lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>F:\SDL\SDL2_ttf-2.0.14\include;F:\SDL\SDL2_image-2.0.1\include;F:\SDL\SDL2-2.0.5\include;$(IncludePath)</IncludePath>
+    <LibraryPath>F:\SDL\SDL2-2.0.5\lib\x64;F:\SDL\SDL2_ttf-2.0.14\lib\x64;F:\SDL\SDL2_image-2.0.1\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>D:\SDL\SDL2_image-devel-2.0.1-VC\SDL2_image-2.0.1\include;D:\SDL\SDL2_ttf-devel-2.0.14-VC\SDL2_ttf-2.0.14\include;D:\SDL\SDL2-devel-2.0.4-VC\SDL2-2.0.4\include;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\SDL\SDL2_image-devel-2.0.1-VC\SDL2_image-2.0.1\lib\x64;D:\SDL\SDL2_ttf-devel-2.0.14-VC\SDL2_ttf-2.0.14\lib\x64;D:\SDL\SDL2-devel-2.0.4-VC\SDL2-2.0.4\lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>F:\SDL\SDL2_image-2.0.1\include;F:\SDL\SDL2_ttf-2.0.14\include;F:\SDL\SDL2-2.0.5\include;$(IncludePath)</IncludePath>
+    <LibraryPath>F:\SDL\SDL2-2.0.5\lib\x64;F:\SDL\SDL2_ttf-2.0.14\lib\x64;F:\SDL\SDL2_image-2.0.1\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>D:\SDL\SDL2_image-devel-2.0.1-VC\SDL2_image-2.0.1\include;D:\SDL\SDL2_ttf-devel-2.0.14-VC\SDL2_ttf-2.0.14\include;D:\SDL\SDL2-devel-2.0.4-VC\SDL2-2.0.4\include;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\SDL\SDL2_image-devel-2.0.1-VC\SDL2_image-2.0.1\lib\x86;D:\SDL\SDL2_ttf-devel-2.0.14-VC\SDL2_ttf-2.0.14\lib\x86;D:\SDL\SDL2-devel-2.0.4-VC\SDL2-2.0.4\lib\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>F:\SDL\SDL2_ttf-2.0.14\include;F:\SDL\SDL2_image-2.0.1\include;F:\SDL\SDL2-2.0.5\include;$(IncludePath)</IncludePath>
+    <LibraryPath>F:\SDL\SDL2_ttf-2.0.14\lib\x86;F:\SDL\SDL2_image-2.0.1\lib\x86;F:\SDL\SDL2-2.0.5\lib\x86;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
